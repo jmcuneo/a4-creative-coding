@@ -1,0 +1,8 @@
+{
+  "name": "a4-zesheng-chen",
+  "description": "Using Three.js to create a creative application",
+  "author": "Zesheng Chen",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
