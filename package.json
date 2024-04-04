@@ -1,8 +1,9 @@
 {
   "name": "a4-zesheng-chen",
-  "description": "Using Three.js to create a creative application",
+  "description": "Using Three.js to create a 3D audio visualization user-interactive application",
   "author": "Zesheng Chen",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "three": "^0.163.0"
   }
 }
