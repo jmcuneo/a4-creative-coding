@@ -4,6 +4,7 @@
   "author": "Zesheng Chen",
   "dependencies": {
     "express": "^4.19.2",
-    "three": "^0.163.0"
+    "three": "^0.163.0",
+    "tweakpane": "^4.0.3"
   }
 }
