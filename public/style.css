@@ -1,0 +1,16 @@
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+#audioFile {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+#colorPicker {
+    position: absolute;
+    top: 115px;
+    right: 10px;
+}

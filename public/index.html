@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Zesh - Audio Visualizer Using Three.js</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        #audioFile { position: absolute; top: 10px; left: 10px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <input type="file" id="audioFile" accept="audio/*">
+<input type="color" id="colorPicker" value="#ffff00">
+
 <script type="importmap">
     {
       "imports": {

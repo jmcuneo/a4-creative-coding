@@ -15,10 +15,19 @@ class AudioVisualizer {
         this.analyser = null;
         this.frequencyData = null;
 
+        this.params = {
+            particleSize: 1.5,
+            torusKnotScale: 1,
+            rotationSpeed: 0.01,
+            color: { r: 255, g: 255, b: 0 }, // Initial color of the torus knot
+        };
+
         window.addEventListener('resize', () => this.onResize());
         this.createVisualElements();
         this.createParticles();
         this.update();
+        this.setupControls();
+
     }
 
 
@@ -66,10 +75,11 @@ class AudioVisualizer {
             this.particles.geometry.attributes.position.needsUpdate = true;
 
             // Scale and rotate the TorusKnot
-            const scale = (this.frequencyData[0] / 128.0) + 0.5;
-            this.torusKnot.scale.set(scale, scale, scale);
-            this.torusKnot.rotation.x += 0.01;
-            this.torusKnot.rotation.y += 0.01;
+            const dynamicScale = this.frequencyData[0] / 128.0 * this.params.torusKnotScale;
+            this.torusKnot.scale.set(dynamicScale, dynamicScale, dynamicScale);
+
+            this.torusKnot.rotation.x += this.params.rotationSpeed;
+            this.torusKnot.rotation.y += this.params.rotationSpeed;
         }
 
         this.renderer.render(this.scene, this.camera);
@@ -109,13 +119,60 @@ class AudioVisualizer {
         this.setupAudioProcessing(audioElement);
     }
 
+    // Using tweakpane for users to control particle size, torus knot scale and its rotation speed
+    setupControls() {
+        const pane = new Pane();
+
+        // Control for particle size
+        pane.addBlade({
+            view: 'slider',
+            label: 'particleSize',
+            min: 0.1,
+            max: 5,
+            value: this.params.particleSize,
+            step: 0.1,
+        }).on('change', (ev) => {
+            this.particles.material.size = ev.value;
+        });
+
+        // Control for torus knot scale
+        pane.addBlade({
+            view: 'slider',
+            label: 'Torus Knot Scale',
+            min: 0.5,
+            max: 2,
+            value: this.params.torusKnotScale,
+        }).on('change', (ev) => {
+            // Update a property that will be used in the update method
+            this.params.torusKnotScale = ev.value;
+        });
+
+        // Control for rotation speed
+        pane.addBlade({
+            view: 'slider',
+            label: 'Rotation Speed',
+            min: 0.001,
+            max: 0.05,
+            value: this.params.rotationSpeed,
+        }).on('change', (ev) => {
+            // Update a property that will be used in the update method
+            this.params.rotationSpeed = ev.value;
+        });
+    }
 }
 
 const visualizer = new AudioVisualizer();
 
+// Load the audio file
 document.getElementById('audioFile').addEventListener('change', function(event) {
     const file = event.target.files[0];
     if (file) {
         visualizer.loadAudio(file);
     }
+});
+
+// Another button for users to control the color of torus knot
+document.getElementById('colorPicker').addEventListener('change', function(event) {
+    const colorValue = event.target.value;
+    visualizer.torusKnot.material.color.set(colorValue);
 });
