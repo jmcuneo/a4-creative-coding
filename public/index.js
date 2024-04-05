@@ -5,12 +5,14 @@ const pane = new Pane();
 const params = {
     "Vertical Interval":7,
     "Horizontal Interval":4,
+    "Total Range":24,
     "Loop Sides":true,
     "Wave Type":"Sine",
     "Update Speed":4
 };
 pane.addBinding(params,"Vertical Interval",{min:0,max:12,step:1});
 pane.addBinding(params,"Horizontal Interval",{min:0,max:12,step:1});
+pane.addBinding(params,"Total Range",{min:12,max:72,step:1});
 pane.addBinding(params,"Loop Sides");
 pane.addBinding(params,"Update Speed",{min:1,max:100,step:1});
 pane.addBinding(params,"Wave Type",{options:{Sine:"Sine",Saw:"Saw",Square:"Square",Sample:"Sample"}});
@@ -155,6 +157,16 @@ window.onkeydown=function(e){
     if(e.key===" "){
         paused=!paused;
     }
+}
+
+//Input is number of semitones above A4
+function noteFrequency(n){
+    return Math.pow(2,n/12)*440;
+}
+
+function gridFrequency(x,y){
+    var value = (params["Horizontal Interval"]*x+params["Vertical Interval"]*y)%params["Total Range"];
+    return noteFrequency(value);
 }
 
 setInterval(function(){
