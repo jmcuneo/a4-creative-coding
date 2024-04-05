@@ -19,7 +19,7 @@ class AudioVisualizer {
             particleSize: 1.5,
             torusKnotScale: 1,
             rotationSpeed: 0.01,
-            color: { r: 255, g: 255, b: 0 }, // Initial color of the torus knot
+            color: { r: 255, g: 255, b: 0 },
         };
         window.addEventListener('resize', () => this.onResize());
 
