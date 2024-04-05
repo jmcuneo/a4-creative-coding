@@ -7,7 +7,7 @@ const params = {
     "Horizontal Interval":4,
     "Total Range":24,
     "Loop Sides":true,
-    "Wave Type":"Sine",
+    // "Wave Type":"Sine",
     "Update Speed":4
 };
 pane.addBinding(params,"Vertical Interval",{min:0,max:12,step:1});
@@ -15,7 +15,7 @@ pane.addBinding(params,"Horizontal Interval",{min:0,max:12,step:1});
 pane.addBinding(params,"Total Range",{min:12,max:72,step:1});
 pane.addBinding(params,"Loop Sides");
 pane.addBinding(params,"Update Speed",{min:1,max:100,step:1});
-pane.addBinding(params,"Wave Type",{options:{Sine:"Sine",Saw:"Saw",Square:"Square",Sample:"Sample"}});
+// pane.addBinding(params,"Wave Type",{options:{Sine:"Sine",Saw:"Saw",Square:"Square",Sample:"Sample"}});
 
 const gridSize = 25;
 const gridSquareSize = 20;
@@ -151,6 +151,7 @@ window.onmousemove=function(e){
 
 window.onmousedown=function(e){
     gridState[Math.floor(mouseY/gridSize)][Math.floor(mouseX/gridSize)]=1;
+    playSingleNote(gridFrequency(0,0));
 }
 
 window.onkeydown=function(e){
@@ -168,6 +169,21 @@ function gridFrequency(x,y){
     var value = (params["Horizontal Interval"]*x+params["Vertical Interval"]*y)%params["Total Range"];
     return noteFrequency(value);
 }
+
+
+function playSingleNote(freq){
+    let audioCtx = new AudioContext();
+    let osc = audioCtx.createOscillator();
+    // let gainNode = audioCtx.createGain();
+    osc.type="square";
+    // osc.connect(gainNode);
+    // gainNode.connect(audioCtx.destination);
+    osc.connect(audioCtx.destination);
+    osc.frequency.value=freq;
+    osc.start(0);
+    osc.stop(audioCtx.currentTime + 10*params["Update Speed"]-1);
+}
+
 
 setInterval(function(){
     drawBackground();
