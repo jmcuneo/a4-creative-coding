@@ -3,7 +3,7 @@ import { Pane } from 'https://cdn.jsdelivr.net/npm/tweakpane@4.0.3/dist/tweakpan
 
 class AudioVisualizer {
 
-    // Sets up the Three.js scene, camera, and renderer
+    // Set up the Three.js scene, camera, and renderer
     constructor() {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -21,17 +21,16 @@ class AudioVisualizer {
             rotationSpeed: 0.01,
             color: { r: 255, g: 255, b: 0 }, // Initial color of the torus knot
         };
-
         window.addEventListener('resize', () => this.onResize());
+
         this.createVisualElements();
         this.createParticles();
         this.update();
         this.setupControls();
-
     }
 
 
-    // Creates visual elements like the TorusKnot and particles
+    // Create visual elements like the TorusKnot and particles
     createVisualElements() {
         const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
         const material = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true });
@@ -40,11 +39,12 @@ class AudioVisualizer {
     }
 
 
-    // Creates particles dynamically and adds them to the scene
+    // Create particles dynamically and adds them to the scene
     createParticles() {
         const particleCount = 5000;
         const particles = new THREE.BufferGeometry();
         const positions = new Float32Array(particleCount * 3);
+
         for (let i = 0; i < particleCount; i++) {
             positions[i * 3] = (Math.random() * 2 - 1) * 500;
             positions[i * 3 + 1] = (Math.random() * 2 - 1) * 500;
@@ -52,6 +52,7 @@ class AudioVisualizer {
         }
         particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         const particleMaterial = new THREE.PointsMaterial({ size: 1.5, color: 0x888888, transparent: true });
+
         this.particles = new THREE.Points(particles, particleMaterial);
         this.scene.add(this.particles);
     }
@@ -66,6 +67,7 @@ class AudioVisualizer {
 
             const time = Date.now() * 0.0005;
             const positions = this.particles.geometry.attributes.position.array;
+
             for (let i = 0; i < positions.length; i += 3) {
                 const ix = i / 3;
                 const freqValue = this.frequencyData[ix % this.frequencyData.length] / 128.0;
@@ -86,7 +88,7 @@ class AudioVisualizer {
     }
 
 
-    // Adjusts the scene aspect ratio on window resize
+    // Adjust the scene aspect ratio on window resize
     onResize() {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
@@ -94,7 +96,7 @@ class AudioVisualizer {
     }
 
 
-    // Configures audio processing using Web Audio API
+    // Configure audio processing using Web Audio API
     setupAudioProcessing(audioElement) {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this.analyser = audioContext.createAnalyser();
@@ -107,8 +109,16 @@ class AudioVisualizer {
     }
 
 
-    // Loads an audio file for visualization
+    // Load an audio file for visualization
     loadAudio(file) {
+        // if an existing audio element is present, pause it before removing
+        const existingAudioElement = document.querySelector('audio');
+        if (existingAudioElement) {
+            existingAudioElement.pause();
+            existingAudioElement.parentNode.removeChild(existingAudioElement);
+        }
+
+        // create a new audio element for the new file
         const audioElement = document.createElement('audio');
         audioElement.src = URL.createObjectURL(file);
         audioElement.controls = true;
@@ -116,6 +126,7 @@ class AudioVisualizer {
         audioElement.style.display = 'none';
         document.body.appendChild(audioElement);
 
+        // setup for the new audio element
         this.setupAudioProcessing(audioElement);
     }
 
@@ -143,7 +154,6 @@ class AudioVisualizer {
             max: 2,
             value: this.params.torusKnotScale,
         }).on('change', (ev) => {
-            // Update a property that will be used in the update method
             this.params.torusKnotScale = ev.value;
         });
 
@@ -155,7 +165,6 @@ class AudioVisualizer {
             max: 0.05,
             value: this.params.rotationSpeed,
         }).on('change', (ev) => {
-            // Update a property that will be used in the update method
             this.params.rotationSpeed = ev.value;
         });
     }
@@ -175,4 +184,24 @@ document.getElementById('audioFile').addEventListener('change', function(event) 
 document.getElementById('colorPicker').addEventListener('change', function(event) {
     const colorValue = event.target.value;
     visualizer.torusKnot.material.color.set(colorValue);
+});
+
+// Display basic documentation for the user interface when the application first loads
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById("infoModal");
+    const span = document.getElementsByClassName("close")[0];
+
+    modal.style.display = "block";
+
+    // clicks on <span> (x), so to close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // clicks anywhere outside the modal can also close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 });
