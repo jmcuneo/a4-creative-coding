@@ -6,11 +6,13 @@ const params = {
     "Vertical Interval":7,
     "Horizontal Interval":4,
     "Loop Sides":true,
-    "Wave Type":"Sine"
+    "Wave Type":"Sine",
+    "Update Speed":4
 };
 pane.addBinding(params,"Vertical Interval",{min:0,max:12,step:1});
 pane.addBinding(params,"Horizontal Interval",{min:0,max:12,step:1});
 pane.addBinding(params,"Loop Sides");
+pane.addBinding(params,"Update Speed",{min:1,max:100,step:1});
 pane.addBinding(params,"Wave Type",{options:{Sine:"Sine",Saw:"Saw",Square:"Square",Sample:"Sample"}});
 
 const gridSize = 25;
@@ -19,9 +21,11 @@ const backgroundColor = "#091129";
 const gridColor = "#ffffff";
 const filledColor = "#f4ff54" //#f4ff54
 const gridThickness=2;
+var frame = 0;
 var gridState = [];
 const gridSizeHorizontal = Math.ceil(c.width/gridSize);
 const gridSizeVertical = Math.ceil(c.height/gridSize);
+var paused=true;
 
 function drawBackground(){
     ctx.fillStyle=backgroundColor;
@@ -134,8 +138,32 @@ initializeGridState();
 // gridState[4][10]=1;
 // gridState[5][9]=1;
 
+var mouseX=0;
+var mouseY=0;
+
+window.onmousemove=function(e){
+    var rect = c.getBoundingClientRect();
+    mouseX=e.clientX-rect.left;
+    mouseY=e.clientY-rect.top;
+}
+
+window.onmousedown=function(e){
+    gridState[Math.floor(mouseY/gridSize)][Math.floor(mouseX/gridSize)]=1;
+}
+
+window.onkeydown=function(e){
+    if(e.key===" "){
+        paused=!paused;
+    }
+}
+
 setInterval(function(){
     drawBackground();
     drawGridState();
-    incGridState();
+    if(!paused){
+        frame++;
+        if(frame%params["Update Speed"]===0){
+            incGridState();
+        }
+    }
 },10);
