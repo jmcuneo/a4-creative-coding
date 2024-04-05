@@ -27,4 +27,4 @@ The application is designed to be intuitive. A modal window will pop up when the
 ## Credits
 **Song used for testing**: Boomwhacker.wav by mayonaka123 -- https://freesound.org/s/410443/ -- License: Creative Commons 0
 
-You are welcome to use this audio file which is inside of the project file, but you can also choose your own audio to have different experiences
+You are welcome to use this audio file which is inside of the project file under 'public', but you can also choose your own audio to have different experiences
