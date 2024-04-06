@@ -8,13 +8,17 @@ const params = {
     "Total Range":24,
     "Loop Sides":true,
     // "Wave Type":"Sine",
-    "Update Speed":4
+    "Update Speed":4,
+    "Volume":0.1,
+    "Oscillator Type":"sine"
 };
 pane.addBinding(params,"Vertical Interval",{min:0,max:12,step:1});
 pane.addBinding(params,"Horizontal Interval",{min:0,max:12,step:1});
 pane.addBinding(params,"Total Range",{min:12,max:72,step:1});
 pane.addBinding(params,"Loop Sides");
 pane.addBinding(params,"Update Speed",{min:1,max:100,step:1});
+pane.addBinding(params,"Volume",{min:0,max:1,step:0.01});
+pane.addBinding(params,"Oscillator Type",{options:{Sine:"sine",Saw:"saw",Square:"square"}})
 // pane.addBinding(params,"Wave Type",{options:{Sine:"Sine",Saw:"Saw",Square:"Square",Sample:"Sample"}});
 
 const gridSize = 25;
@@ -22,7 +26,9 @@ const gridSquareSize = 20;
 const backgroundColor = "#091129";
 const gridColor = "#ffffff";
 const filledColor = "#f4ff54" //#f4ff54
+const barColor = "#ff0000";
 const gridThickness=2;
+const barWidth = 5;
 var frame = 0;
 var gridState = [];
 const gridSizeHorizontal = Math.ceil(c.width/gridSize);
@@ -150,8 +156,11 @@ window.onmousemove=function(e){
 }
 
 window.onmousedown=function(e){
-    gridState[Math.floor(mouseY/gridSize)][Math.floor(mouseX/gridSize)]=1;
-    playSingleNote(gridFrequency(0,0));
+    let x = Math.floor(mouseX/gridSize);
+    let y = Math.floor(mouseY/gridSize);
+    gridState[y][x]=1-gridState[y][x];
+    // playSingleNote(gridFrequency(0,0));
+    // playMultipleNotes([gridFrequency(0,0),gridFrequency(0,1),gridFrequency(0,2)]);
 }
 
 window.onkeydown=function(e){
@@ -170,28 +179,50 @@ function gridFrequency(x,y){
     return noteFrequency(value);
 }
 
-
-function playSingleNote(freq){
+function playMultipleNotes(frequencies){
+    if(frequencies.length===0){
+        return;
+    }
     let audioCtx = new AudioContext();
-    let osc = audioCtx.createOscillator();
-    // let gainNode = audioCtx.createGain();
-    osc.type="square";
-    // osc.connect(gainNode);
-    // gainNode.connect(audioCtx.destination);
-    osc.connect(audioCtx.destination);
-    osc.frequency.value=freq;
-    osc.start(0);
-    osc.stop(audioCtx.currentTime + 10*params["Update Speed"]-1);
+    let gainNode = audioCtx.createGain();
+    gainNode.gain.value = params["Volume"]/frequencies.length;
+    gainNode.connect(audioCtx.destination);
+    for(let i = 0; i < frequencies.length; i++){
+        let osc = audioCtx.createOscillator();
+        osc.type=params["Oscillator Type"];
+        osc.frequency.value=frequencies[i];
+        osc.connect(gainNode);
+        osc.start(0);
+        osc.stop((10*params["Update Speed"]-1)/1000);
+    }
+    // osc.connect(audioCtx.destination);
+    
+    
 }
 
+var barX = 0;
 
 setInterval(function(){
     drawBackground();
     drawGridState();
     if(!paused){
         frame++;
+        ctx.fillStyle=barColor;
+        let barDisplayX = barX * gridSize;
+        ctx.fillRect(barDisplayX-barWidth/2,0,barWidth,c.height);
         if(frame%params["Update Speed"]===0){
-            incGridState();
+            let frequencies = [];
+            for(let i = 0; i < gridSizeVertical; i++){
+                if(gridState[i][barX] === 1){
+                    frequencies.push(gridFrequency(barX,i));
+                }
+            }
+            playMultipleNotes(frequencies);
+            if(barX >= gridSizeHorizontal){
+                barX=0;
+                incGridState();
+            }
+            barX++;
         }
     }
 },10);
