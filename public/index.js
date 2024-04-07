@@ -35,6 +35,7 @@ const gridSizeHorizontal = Math.ceil(c.width/gridSize);
 const gridSizeVertical = Math.ceil(c.height/gridSize);
 var paused=true;
 
+//Draw the background
 function drawBackground(){
     ctx.fillStyle=backgroundColor;
     ctx.fillRect(0,0,c.width,c.height);
@@ -47,6 +48,7 @@ function drawBackground(){
     }
 }
 
+//Set grid state to all 0's
 function initializeGridState(){
     for(let i = 0; i < gridSizeVertical; i++){
         gridState.push([]);
@@ -56,6 +58,7 @@ function initializeGridState(){
     }
 }
 
+//Draw the grid according to its current state
 function drawGridState(){
     ctx.fillStyle=filledColor;
     for(let i = 0; i < gridSizeVertical; i++){
@@ -71,6 +74,7 @@ function drawGridState(){
     }
 }
 
+//Get the value of a neighbor to a given location given its x,y and an x and y value to add. incX and incY should be integers between -1 and 1
 function getNeighborValue(x,y,incX,incY){
     let newX = x+incX;
     let newY = y+incY;
@@ -94,6 +98,7 @@ function getNeighborValue(x,y,incX,incY){
     return gridState[newY][newX];
 }
 
+//Conway's game of life rules for each tile given its neighbors
 function shouldBeActive(x,y){
     /*
     Simplified rules:
@@ -104,6 +109,7 @@ function shouldBeActive(x,y){
     anything above: 0
     */
     let numNeighbors = 0;
+    //Since neighbor value is either 0 or 1, we can add all 8 neighbors.
     numNeighbors+=getNeighborValue(x,y,-1,-1);
     numNeighbors+=getNeighborValue(x,y,0,-1);
     numNeighbors+=getNeighborValue(x,y,1,-1);
@@ -115,6 +121,7 @@ function shouldBeActive(x,y){
     if(gridState[y][x] === 1){
         console.log(`(${x}, ${y}) has ${numNeighbors} neighbors.`);
     }
+    //See comment at beginning of function
     switch(numNeighbors){
         case 0:
         case 1:
@@ -128,6 +135,7 @@ function shouldBeActive(x,y){
     }
 }
 
+//Update the grid state variable
 function incGridState(){
     let nextGridState = [];
     for(let y = 0; y < gridSizeVertical; y++){
@@ -149,12 +157,15 @@ initializeGridState();
 var mouseX=0;
 var mouseY=0;
 
+//When mouse is moved, update the mouse location relative to the canvas.
 window.onmousemove=function(e){
     var rect = c.getBoundingClientRect();
     mouseX=e.clientX-rect.left;
     mouseY=e.clientY-rect.top;
 }
 
+
+//Swap the state of the tile clicked
 window.onmousedown=function(e){
     let x = Math.floor(mouseX/gridSize);
     let y = Math.floor(mouseY/gridSize);
@@ -163,22 +174,25 @@ window.onmousedown=function(e){
     // playMultipleNotes([gridFrequency(0,0),gridFrequency(0,1),gridFrequency(0,2)]);
 }
 
+//Swap the paused boolean if the user presses space
 window.onkeydown=function(e){
     if(e.key===" "){
         paused=!paused;
     }
 }
 
-//Input is number of semitones above A4
+//Input is number of semitones above A4, output is the frequency
 function noteFrequency(n){
     return Math.pow(2,n/12)*440;
 }
 
+//Given an x-y grid value, return the frequency it should play
 function gridFrequency(x,y){
     var value = (params["Horizontal Interval"]*x+params["Vertical Interval"]*y)%params["Total Range"];
     return noteFrequency(value);
 }
 
+//Given a list of frequencies, play all notes for the right amount of time.
 function playMultipleNotes(frequencies){
     if(frequencies.length===0){
         return;
@@ -193,6 +207,7 @@ function playMultipleNotes(frequencies){
         osc.frequency.value=frequencies[i];
         osc.connect(gainNode);
         osc.start(0);
+        //Play until the sequencer would move to the next note.
         osc.stop((10*params["Update Speed"]-1)/1000);
     }
     // osc.connect(audioCtx.destination);
@@ -201,7 +216,7 @@ function playMultipleNotes(frequencies){
 }
 
 var barX = 0;
-
+//Main loop
 setInterval(function(){
     drawBackground();
     drawGridState();
@@ -210,14 +225,18 @@ setInterval(function(){
         ctx.fillStyle=barColor;
         let barDisplayX = barX * gridSize;
         ctx.fillRect(barDisplayX-barWidth/2,0,barWidth,c.height);
+        //This if statement is how we implement update speed
         if(frame%params["Update Speed"]===0){
+            //Find frequencies for each activated tile in this column
             let frequencies = [];
             for(let i = 0; i < gridSizeVertical; i++){
                 if(gridState[i][barX] === 1){
                     frequencies.push(gridFrequency(barX,i));
                 }
             }
+            //Play the frequencies
             playMultipleNotes(frequencies);
+            //When we get to the end, run the Game of Life rules then start over.
             if(barX >= gridSizeHorizontal){
                 barX=0;
                 incGridState();
