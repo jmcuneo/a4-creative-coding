@@ -1,0 +1,22 @@
+{
+    "name": "a4-creative-coding",
+    "version": "1.0.0",
+    "description": "A web-based implementation of The Game of Life.",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "keywords": [
+      "express",
+      "game",
+      "web"
+    ],
+    "author": "lcfoley",
+    "license": "ISC",
+    "dependencies": {
+      "express": "^4.17.1",
+      "body-parser": "^1.19.0",
+      "cors": "^2.8.5"
+    }
+  }
+  
