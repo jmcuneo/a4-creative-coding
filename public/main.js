@@ -1,6 +1,7 @@
 let audioElement
 let backgroundColor
 let columnColor
+let coloredPageBackground = true
 
 const start = function() {
     const canvas = document.getElementById('visualizer');
@@ -71,12 +72,78 @@ const initializeCanvas = function(){
 const setColors = function(){
     backgroundColor = document.getElementById('backgroundColorPicker').value
     columnColor = document.getElementById('columnColorPicker').value
+
+    //Change page background color
+    if(coloredPageBackground) {
+        document.body.style.backgroundColor = averageColor(backgroundColor, columnColor)
+        let whiteText = isDarkColor(averageColor(backgroundColor, columnColor))
+        if (whiteText) {
+            changeTextColors("white")
+        } else {
+            changeTextColors("#4A4A4A")
+        }
+    }
     initializeCanvas()
 }
+
+function changeTextColors(color){
+    const header = document.getElementById("header");
+    header.style.color = color;
+    const labels = document.querySelectorAll("label");
+    labels.forEach(label => {
+        label.style.color = color; // Change to the desired color
+    });
+}
+
+function averageColor(hex1, hex2) {
+    const hexToRgb = hex => ({
+        r: parseInt(hex.slice(1, 3), 16),
+        g: parseInt(hex.slice(3, 5), 16),
+        b: parseInt(hex.slice(5, 7), 16)
+    });
+
+    const rgbToHex = rgb => '#' + ((1 << 24) + (rgb.r << 16) + (rgb.g << 8) + rgb.b).toString(16).slice(1);
+
+    const rgb1 = hexToRgb(hex1);
+    const rgb2 = hexToRgb(hex2);
+
+    const avgR = Math.round((rgb1.r + rgb2.r) / 2);
+    const avgG = Math.round((rgb1.g + rgb2.g) / 2);
+    const avgB = Math.round((rgb1.b + rgb2.b) / 2);
+
+    return rgbToHex({ r: avgR, g: avgG, b: avgB });
+}
+
+function isDarkColor(hex) {
+    // Convert hex to RGB
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+
+    // Calculate brightness using the formula (R * 299 + G * 587 + B * 114) / 1000
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+    // Return true if brightness is below a certain threshold (adjust as needed)
+    return brightness < 128;
+}
+
+function toggleVariable() {
+    coloredPageBackground = !coloredPageBackground; // Toggle the variable value
+    if(!coloredPageBackground){
+        document.body.style.backgroundColor = "gray"
+        changeTextColors("#4A4A4A")
+        document.getElementById("toggleButton").textContent = "Background Color Off"
+    } else{
+        document.getElementById("toggleButton").textContent = "Background Color On"
+        setColors()
+    }
+}
+
 
 window.onload = () => {
     setColors()
     document.getElementById('startButton').onclick = start;
     document.getElementById('stopButton').onclick = stop;
     document.getElementById('colorSubmit').onclick = setColors;
+    document.getElementById("toggleButton").onclick = toggleVariable;
 }
