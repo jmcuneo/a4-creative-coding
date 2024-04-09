@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang='en'>
+<script src="main.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
+<link rel="stylesheet" href="style.css" type="text/css">
+
+<head></head>
+<body>
+
+<div class="container">
+    <h1>Audio Visualizer</h1>
+
+    <canvas id="visualizer" width="800" height="200"></canvas>
+    <br>
+    <div class="buttonContainer">
+        <button id="startButton">Start Music</button>
+        <button id="stopButton">Stop Music</button>
+    </div>
+
+    <div class="colorFormContainer">
+        <div class="colorForm">
+            <label for="backgroundColorPicker">Background color:</label>
+            <input type="color" id="backgroundColorPicker" name="backgroundColorPicker">
+        </div>
+        <div class="colorForm">
+            <label for="columnColorPicker">Column color:</label>
+            <input type="color" id="columnColorPicker" name="columnColorPicker" value="#ffffff">
+        </div>
+    </div>
+    <button id="colorSubmit">Submit</button>
+
+
+</div>
+</body>
+
+</html>

@@ -1,4 +1,6 @@
 let audioElement
+let backgroundColor
+let columnColor
 
 const start = function() {
     const canvas = document.getElementById('visualizer');
@@ -30,11 +32,11 @@ const start = function() {
 
         // fill our canvas with a black box
         // by doing this every frame we 'clear' the canvas
-        ctx.fillStyle = 'black';
+        ctx.fillStyle = backgroundColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // set the color to white for drawing our visualization
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = columnColor;
 
         analyser.getByteFrequencyData(dataArray);
 
@@ -59,7 +61,25 @@ const stop = function() {
     audioElement.pause();
 };
 
+const initializeCanvas = function(){
+    const canvas = document.getElementById('visualizer');
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+const setColors = function(){
+    backgroundColor = document.getElementById('backgroundColorPicker').value
+    columnColor = document.getElementById('columnColorPicker').value
+    initializeCanvas()
+}
+
 window.onload = () => {
+    backgroundColor = document.getElementById('backgroundColorPicker').value
+    columnColor = document.getElementById('columnColorPicker').value
+
+    initializeCanvas()
     document.getElementById('startButton').onclick = start;
     document.getElementById('stopButton').onclick = stop;
+    document.getElementById('colorSubmit').onclick = setColors;
 }
