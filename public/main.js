@@ -75,10 +75,7 @@ const setColors = function(){
 }
 
 window.onload = () => {
-    backgroundColor = document.getElementById('backgroundColorPicker').value
-    columnColor = document.getElementById('columnColorPicker').value
-
-    initializeCanvas()
+    setColors()
     document.getElementById('startButton').onclick = start;
     document.getElementById('stopButton').onclick = stop;
     document.getElementById('colorSubmit').onclick = setColors;
