@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive Grid Game</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+    <div>
+        <label for="widthInput">Width:</label>
+        <input type="number" id="widthInput" min="1">
+        <label for="heightInput">Height:</label>
+        <input type="number" id="heightInput" min="1">
+        <label for="blockColorInput">Block Color:</label>
+        <input type="color" id="blockColorInput">
+        <label for="tickSpeedInput">Tick Speed (ms):</label>
+        <input type="number" id="tickSpeedInput" min="100">
+        <button onclick="drawGrid()">Draw Grid</button>
+        <button onclick="clearGrid()">Clear Grid</button>
+    </div>
+    <canvas id="gridCanvas"></canvas>
+    <button id="startStopBtn" onclick="toggleGame()">Start</button>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">×</span>
+            <h2>Welcome to The Game of Life!</h2>
+            <p>Rules</p>
+            <p>For a populated space:</p>
+            <ul>
+                <li>Each block with one or no neighbors dies</li>
+                <li>Each block with four or more neighbors dies</li>
+                <li>Each block with two or three neighbors survives</li>
+            </ul>
+            <p>For an empty or unpopulated space:</p>
+            <ul>
+                <li>Each block with three neighbors becomes populated</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let grid = [];
+        let remSizeInPixels, gameInterval, isGameRunning = false;
+        let selectedColor = document.getElementById('blockColorInput').value;
+
+        function getRemSizeInPixels() {
+            return parseFloat(getComputedStyle(document.documentElement).fontSize);
+        }
+
+        function drawBlock(ctx, x, y, block) {
+            ctx.fillStyle = block.filled ? block.color : "white";
+            ctx.fillRect(x * remSizeInPixels, y * remSizeInPixels, remSizeInPixels, remSizeInPixels);
+            ctx.strokeRect(x * remSizeInPixels, y * remSizeInPixels, remSizeInPixels, remSizeInPixels);
+        }
+
+
+        function toggleBlockColor(event) {
+            if (isGameRunning) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const blockX = Math.floor(x / remSizeInPixels);
+            const blockY = Math.floor(y / remSizeInPixels);
+
+            if (grid[blockY] && grid[blockY][blockX] !== undefined) {
+                let block = grid[blockY][blockX];
+                if (block.filled) {
+                    block.filled = false;
+                    block.color = null;
+                } else {
+                    block.filled = true;
+                    block.color = selectedColor;
+                }
+                drawGrid();
+            }
+        }
+
+        function drawGrid() {
+            const width = document.getElementById('widthInput').value;
+            const height = document.getElementById('heightInput').value;
+            remSizeInPixels = getRemSizeInPixels();
+            const canvas = document.getElementById('gridCanvas');
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = width * remSizeInPixels;
+            canvas.height = height * remSizeInPixels;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let y = 0; y < height; y++) {
+                grid[y] = grid[y] || [];
+                for (let x = 0; x < width; x++) {
+                    grid[y][x] = grid[y][x] || { filled: false, color: null };
+                    drawBlock(ctx, x, y, grid[y][x]);
+                }
+            }
+        }
+
+        function updateGrid() {
+            const newGrid = grid.map(row => row.map(block => ({ filled: block.filled, color: block.color })));
+            for (let y = 0; y < grid.length; y++) {
+                for (let x = 0; x < grid[y].length; x++) {
+                    const neighbors = countBlueNeighbors(x, y);
+                    const currentBlock = grid[y][x];
+                    if (currentBlock.filled) {
+                        if (neighbors < 2 || neighbors > 3) {
+                            newGrid[y][x].filled = false;
+                            newGrid[y][x].color = null;
+                        }
+                    } else {
+                        if (neighbors === 3) {
+                            newGrid[y][x].filled = true;
+                            newGrid[y][x].color = selectedColor;
+                        }
+                    }
+                }
+            }
+            grid = newGrid;
+            drawGrid();
+        }
+
+        function countBlueNeighbors(x, y) {
+            let count = 0;
+            for (let dy = -1; dy <= 1; dy++) {
+                for (let dx = -1; dx <= 1; dx++) {
+                    if (dx === 0 && dy === 0) continue;
+                    const nx = x + dx, ny = y + dy;
+                    if (nx >= 0 && nx < grid[0].length && ny >= 0 && ny < grid.length && grid[ny][nx].filled) {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+
+        function toggleGame() {
+            const btn = document.getElementById('startStopBtn');
+            const tickSpeed = parseInt(document.getElementById('tickSpeedInput').value, 10);
+            isGameRunning = !isGameRunning;
+            if (isGameRunning) {
+                btn.textContent = 'Stop';
+                gameInterval = setInterval(updateGrid, tickSpeed);
+            } else {
+                btn.textContent = 'Start';
+                clearInterval(gameInterval);
+            }
+        }
+
+        function clearGrid() {
+            for (let y = 0; y < grid.length; y++) {
+                for (let x = 0; x < grid[y].length; x++) {
+                    grid[y][x] = { filled: false, color: null };
+                }
+            }
+            drawGrid();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('http://localhost:3000/settings')
+                .then(response => response.json())
+                .then(settings => {
+                    document.getElementById('widthInput').value = settings.width;
+                    document.getElementById('heightInput').value = settings.height;
+                    document.getElementById('blockColorInput').value = settings.color;
+                    selectedColor = settings.color;
+                    document.getElementById('tickSpeedInput').value = settings.tickSpeed;
+                    drawGrid();
+                })
+                .catch(error => console.error('Error fetching game settings:', error));
+        });
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const modal = document.getElementById("myModal");
+            modal.style.display = "block";
+
+            document.querySelector(".close-button").onclick = function () {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+
+        document.getElementById('blockColorInput').addEventListener('change', function (event) {
+            selectedColor = event.target.value;
+        });
+
+        const canvas = document.getElementById('gridCanvas');
+        canvas.addEventListener('click', toggleBlockColor);
+
+        drawGrid();
+    </script>
+</body>
+
+</html>
