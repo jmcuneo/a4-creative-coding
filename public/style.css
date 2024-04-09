@@ -3,7 +3,7 @@ canvas{
     border: 3px solid black;
 }
 button{
-    margin: 10px;
+    margin: 10px 10px 10px 0px;
 }
 .container {
     display: flex;
@@ -34,3 +34,16 @@ button{
 input{
     margin-right: 20px;
 }
+input[type=range] {
+    width: 80%;
+}
+.slider-labels {
+    position: relative;
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    top: -5px;
+    left: -5px;
+}
+

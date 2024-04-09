@@ -2,6 +2,7 @@ let audioElement
 let backgroundColor
 let columnColor
 let coloredPageBackground = true
+let barCount = 1024
 
 const start = function() {
     const canvas = document.getElementById('visualizer');
@@ -14,7 +15,7 @@ const start = function() {
 
     // audio graph setup
     const analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 1024; // 512 bins
+    analyser.fftSize = barCount; // 512 bins
     const player = audioCtx.createMediaElementSource(audioElement);
     player.connect(audioCtx.destination);
     player.connect(analyser);
@@ -62,6 +63,11 @@ const stop = function() {
     audioElement.pause();
 };
 
+function updateValue() {
+    let sliderValue = document.getElementById("barSlider").value;
+    barCount = Math.pow(2, sliderValue);
+}
+
 const initializeCanvas = function(){
     const canvas = document.getElementById('visualizer');
     const ctx = canvas.getContext('2d');
@@ -93,6 +99,7 @@ function changeTextColors(color){
     labels.forEach(label => {
         label.style.color = color; // Change to the desired color
     });
+
 }
 
 function averageColor(hex1, hex2) {
@@ -146,4 +153,5 @@ window.onload = () => {
     document.getElementById('stopButton').onclick = stop;
     document.getElementById('colorSubmit').onclick = setColors;
     document.getElementById("toggleButton").onclick = toggleVariable;
+    document.getElementById("barSlider").addEventListener("input", updateValue);
 }
