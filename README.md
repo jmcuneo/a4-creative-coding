@@ -1,24 +1,12 @@
-# a4
+## 3D Model Viewer Tester
 
-## Project setup
-```
-npm install
-```
+https://a4-shimingde-d2f63b749035.herokuapp.com/
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Include a very brief summary of your project here. Images are encouraged when needed, along with concise, high-level text. Be sure to include:
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- the goal of this application is to create a model viewer using three.js
+- I spend a lot of time on making the model animated
+- The view of the scene can be changed using mouse action
+- Code Source 1: https://github.com/mrdoob/three.js/blob/master/examples/webgl_animation_keyframes.html
+- Code Source 2: https://sbcode.net/threejs/fbx-animation/
+- 
