@@ -1,0 +1,12 @@
+{
+  "name": "Simple game",
+  "version": "1.0",
+  "description": "Simple game written in THREE.js",
+  "author": "Éamonn Prendergast",
+  "scripts": {
+    "start": "python -m http.server"
+  },
+  "dependencies": {
+    "three": "^0.163.0"
+  }
+}
