@@ -74,23 +74,20 @@ export default {
                 scene.add(object);
                 this.mixer = new THREE.AnimationMixer(object);
 
-                // Assume there's at least one animation and we play the first one.
+
                 if (object.animations.length > 0) {
                     let animationAction = this.mixer.clipAction(object.animations[0]);
                     this.animationActions.push(animationAction);
-                    // Play the first animation immediately.
                     this.activeAction = animationAction;
                     this.activeAction.play();
                 }
 
-                // Now the model is ready to be animated
-                this.modelReady = true; // Ensure this is set so the animation updates run
+                this.modelReady = true;
 
                 this.loader.load('Model2_D.fbx', (animObject) => {
                     const additionalAnimationAction = this.mixer.clipAction(animObject.animations[0]);
                     this.animationActions.push(additionalAnimationAction);
 
-                    // Update GUI here if necessary, or set up GUI after all loads are complete
                     this.setupGUI();
                 });
             });
