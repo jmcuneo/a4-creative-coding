@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zesh - Audio Visualizer Using Three.js</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="infoModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>3D Audio Visualizer Controls</h2>
+        <p>Welcome to the Audio Visualizer made by Zesh! Here's how to control the audio visualization:</p>
+        <ul>
+            <li><strong>Upload Audio:</strong> Click on 'Choose File' to load your audio file.</li>
+            <li><strong>Particle Size:</strong> Use the slider to adjust the size of the particles.</li>
+            <li><strong>Torus Knot Scale:</strong> Use the slider to scale the Torus Knot geometry.</li>
+            <li><strong>Rotation Speed:</strong> Use the slider to adjust how fast the Torus Knot rotates.</li>
+            <li><strong>Color Picker:</strong> Click on the color button to change the color of the Torus Knot.</li>
+        </ul>
+        <p>Have fun!</p>
+    </div>
+</div>
+
+<input type="file" id="audioFile" accept="audio/*">
+<label for="colorPicker"></label>
+<input type="color" id="colorPicker" value="#ffff00">
+
+<script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+      }
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script type="module" src="./script.js"></script>
+</body>
+</html>
