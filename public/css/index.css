@@ -1,0 +1,42 @@
+#movie-line-charts {
+    display: flex;
+    flex-direction: row;
+}
+
+body {
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+#info-wrapper {
+    visibility: hidden;
+    position: relative;
+    position: fixed;
+    top: 50px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: #555555;
+    opacity: 0.5;
+}
+
+#info-container {
+    visibility: hidden;
+    position: relative;
+    position: fixed;
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    height: 85%;
+    background-color: #ececec;
+    opacity: 1;
+    padding: 20px;
+}
+
+#info-wrapper.show {
+    visibility: visible;
+}
+
+#info-container.show {
+    visibility: visible;
+}

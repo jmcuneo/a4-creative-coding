@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <title>A4 - Movie Data Vis - CS 4241</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta name="description" content="CS 4241 A3, By Jack Lafond, A web app that connects to a mongodb database. This web app tracks birthday information for different people that a user enters.">
+        <!-- get rid of favicon error -->
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+        <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura-earthly.css" type="text/css">
+        <link rel="stylesheet" href="css/index.css">
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+        <script src="js/index.js"></script>
+    </head>
+
+    <body>
+
+        <button id="info-toggle" onclick="toggleInfo()">Toggle Info</button>
+
+        <div id="info-wrapper"></div>
+
+        <div id="info-container">
+
+            <h6>(Click Toggle Button to Hide)</h6>
+            <h3>About This Page</h3>
+            <p>This webpage is an interactive data visualization using d3. The data is gathered from an online json source (https://raw.githubusercontent.com/prust/wikipedia-movie-data/master/movies.json) that has information about movies, their release year, cast, and genres from 1900 to 2023.</p>
+
+            <h5>These visualizations include:</h5>
+            <ul>
+                <li>Total number of movies released each year</li>
+                <li>Total number of movies each year, by genre in the top 5 genres for that time span</li>
+                <li>The top 10 count of actors that were casted in movies for a specified genre</li>
+                <li>The top 10 count of genres for movies that a specified actor was casted in</li>
+            </ul>
+
+            <h5>Instructions:</h5>
+            <ul>
+                <li>To change the year for the movie line charts, edit the start and end years (the left and right year inputs, respectively), then click the update button. To reset to the original years, click the reset button.</li>
+                <li>To view the top 10 actors for a specific genre, use the drop down select to choose one of the genres in the dataset. After selecting one the bar chart will populate with the corresponding data showing the top 10 counts of actors appearing in that genre.</li>
+                <li>To view the top 10 genres for an actor use the drop down select to select one of the actors in the list. Note that this list only inlcudes the actors within the top 400 count of movie appearances. After selecting an actor the bubble chart will fill with the corresponding data showing that slected actor's top 10 genres.</li>
+            </ul>
+
+        </div>
+
+        <h1>Movie API Data Vis</h1>
+
+        <h5>Movies By Year</h5>
+        <div id="movie-line-container">
+
+            <input type="number" id="min-year" name="min-year" min="1900" max="2023" value="1900">
+            <input type="number" id="max-year" name="max-year" min="1900" max="2023" value="2023">
+            <button id="line-chart-update" onclick="updateLineCharts()">Update Chart</button>
+            <button id="line-chart-reset" onclick="resetLineCharts()">Reset</button>
+
+            <div id="movie-line-charts">
+
+                <div id="movie-reg-line-container">
+                    <p>Total</p>
+                    <div class="svg-container" id="movie-reg-line"></div>
+                </div>
+
+                <div id="movie-genre-line-container">
+                    <p>By Genre</p>
+                    <div class="svg-container" id="movie-genre-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <h5>Top 10 Actors By Genre</h5>
+        <p>(Count of Movies Casted in For That Genre)</p>
+        <div id="actor-bar-container">
+            <div id="select-genre">
+                <label for="genre">Choose a Genre:</label>
+                <select name="genre" id="genre" onchange="makeGenreBar()">
+                </select>
+            </div>
+            <div class="svg-container" id="actor-bar"></div>
+        </div>
+
+        <h5>Top 10 Genres For An Actor</h5>
+        <p>(Count of Movie Genres Casted in, Only Listing Top 400 Actors)</p>
+        <div id="genre-bubble-container">
+            <div id="select-actor">
+                <label for="actor">Choose an Actor:</label>
+                <select name="actor" id="actor" onchange="makeActorBubble()">
+                </select>
+            </div>
+            <div class="svg-container" id="actor-bubble"></div>
+        </div>
+
+    </body>
+
+</html>
