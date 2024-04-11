@@ -197,7 +197,7 @@ function spawnZombies() {
 	// but whatever. people on 60 fps monitors will be chilling while
 	// 144 fps will suffer. also i think movement is FPS based? not sure how
 	// the PointerLockControls work
-	if (rng < 0.01 && zombieCount < 75) {
+	if (rng < 0.013 && zombieCount < 75) {
 		addZombie();
 	}
 }
