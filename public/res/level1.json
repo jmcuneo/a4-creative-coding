@@ -1,0 +1,41 @@
+{
+    "start": {
+        "x": 50,
+        "y": 80
+    },
+    "parameters": {
+
+    },
+    "geometry": [
+        {
+            "x": 0,
+            "y": 0,
+            "width": 100,
+            "height": 1
+        },
+        {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 100
+        },
+        {
+            "x": 0,
+            "y": 99,
+            "width": 100,
+            "height": 1
+        },
+        {
+            "x": 99,
+            "y": 0,
+            "width": 1,
+            "height": 100
+        },
+        {
+            "x": 10,
+            "y": 10,
+            "width": 80,
+            "height": 10
+        }
+    ]
+}

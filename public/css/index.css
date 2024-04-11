@@ -1,0 +1,27 @@
+:root {
+    --main-text: #232322;
+    --side-bg: #47545E;
+    --side-text: #2b87ce;
+    --special-bg: #4F7C9E;
+    --main-bg: #897250;
+    --blinder: #E69927;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--main-bg);
+    color: var(--main-text);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#animation-wrapper {
+    max-width: 90%;
+    max-height: 90%;
+    width: 100%;
+    aspect-ratio: 5/3;
+}
