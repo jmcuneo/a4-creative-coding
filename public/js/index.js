@@ -551,4 +551,5 @@ window.onload = () => {
     makeGenreLineChart();
     fillGenreSelect();
     fillActorSelect();
+    toggleInfo();
 }
