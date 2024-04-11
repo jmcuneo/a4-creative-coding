@@ -1,13 +1,16 @@
 const express = require('express');
+const path = require("path");
 const app = express();
 const dotenv = require("dotenv").config();
 
 // Define the port
 const port = process.env.PORT || 3000; // Use process.env.PORT or default to 3000 if not specified in the environment variables
 
-app.set("view engine", "ejs");
+
+app. use(express. static('public'));
 app.get("/", (req, res) => {
-    res.render("index");
+    const htmlFile = path.join(__dirname, './public/html/index.html');
+    res.sendFile(htmlFile)
 });
 
 app.listen(port, () => {
