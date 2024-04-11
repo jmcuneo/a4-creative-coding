@@ -1,3 +1,6 @@
+const aspectRatio = 5/3;
+const sensitivity = 1/5;
+
 class GameState {
     constructor(levelData) {
         this.coords = { x: (levelData.start.x / 100) || 0.5, y: (levelData.start.y / 100) || 0.5 };
@@ -5,58 +8,94 @@ class GameState {
         this.parameters = {
             radius: levelData.parameters.radius || 0.025, 
             friction: levelData.parameters.friction || 0.05,
-            gravity: levelData.parameters.gravity || 0.0025,
+            gravity: levelData.parameters.gravity || 0.001,
             terminalVelocity: levelData.parameters.terminalVelocity || 0.05,
             elasticity: levelData.parameters.elasticity || 0.01
         };
-        this.geometry = levelData.geometry.map(g => new Rectangle(g.x, g.y, g.width, g.height));
+        this.geometry = levelData.geometry.map(g => new Rectangle(g.x, g.y, g.width, g.height, g.elasticity, g.friction));
     }
 
     fixCollisions() {
         for(let rect of this.geometry) {
-            if(rect.intersects(this.coords.x + this.force.x, this.coords.y + this.force.y, this.parameters.radius)) {
+            const shiftedX = Math.max(this.parameters.radius, Math.min(1 - this.parameters.radius, this.coords.x + this.force.x));
+            const shiftedY = Math.max(this.parameters.radius * aspectRatio, Math.min(1 - this.parameters.radius * aspectRatio, this.coords.y + this.force.y));
+            if(rect.intersects(shiftedX, shiftedY, this.parameters.radius)) {
                 rect.preventCollision(this.coords.x, this.coords.y, this.parameters.radius, this.force);
+                if(rect.collideX !== null) {
+                    this.force.x = rect.collideX;
+                    if(this.force.y !== 0) {
+                        this.force.y = boundRound(this.force.y * rect.friction, 0);
+                    }
+                    rect.collideX = null;
+                }
+                if(rect.collideY !== null) {
+                    this.force.y = rect.collideY;
+                    if(this.force.x !== 0) {
+                        this.force.x = boundRound(this.force.x * rect.friction, 0);
+                    }
+                    rect.collideY = null;
+                }
+            } else {
+                rect.collideX = null;
+                rect.collideY = null;
             }
         }
     }
 }
 
 class Rectangle {
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, elasticity, friction) {
         this.x = x / 100.0;
         this.y = y / 100.0;
         this.width = width / 100.0;
         this.height = height / 100.0;
+        this.elasticity = elasticity;
+        this.friction = friction;
+        this.collideX = null;
+        this.collideY = null;
     }
 
     intersects(x, y, radius) {
         return (x + radius >= this.x && x - radius <= this.x + this.width)
-        && (y + radius * 5/3 >= this.y && y - radius * 5/3 <= this.y + this.height);
+        && (y + radius * aspectRatio >= this.y && y - radius * aspectRatio <= this.y + this.height);
     }
 
     preventCollision(x, y, radius, force) {
-        if(y + radius * 5/3 <= this.y && y + radius * 5/3 + force.y > this.y) {
+        if(y + radius * aspectRatio <= this.y && y + radius * aspectRatio + force.y > this.y) {
             // Top collision
-            force.y = this.y - (y + radius * 5/3);
+            this.collideY = boundRound(-this.elasticity * force.y, 0);
+            force.y = boundRound(this.y - (y + radius * aspectRatio), 0);
         }
-        if(y - radius * 5/3 >= this.y + this.height && y - radius * 5/3 + force.y < this.y + this.height) {
+        if(y - radius * aspectRatio >= this.y + this.height && y - radius * aspectRatio + force.y < this.y + this.height) {
             // Bottom collision
-            force.y = (this.y + this.height) - (y - radius * 5/3);
+            this.collideY = boundRound(-this.elasticity * force.y, 0);
+            force.y = boundRound((this.y + this.height) - (y - radius * aspectRatio), 0);
         }
         if(x + radius <= this.x && x + radius + force.x > this.x) {
             // Left collision
-            force.x = this.x - (x + radius);
+            this.collideX = boundRound(-this.elasticity * force.x, 0);
+            force.x = boundRound(this.x - (x + radius), 0);
         } 
         if(x - radius >= this.x + this.width && x - radius + force.x < this.x + this.width) {
             // Right collision
-            force.x = (this.x + this.width) - (x - radius);
+            this.collideX = boundRound(-this.elasticity * force.x, 0);
+            force.x = boundRound((this.x + this.width) - (x - radius), 0);
         }
     }
 }
 
-const epsilon = 0.00001; //minimum recognized change in values
+const epsilon = 0.0015; //minimum recognized change in values
 function bounded(x, y) {
     return Math.abs(y - x) < epsilon;
+}
+
+// Rounds x to y if x and y are bounded
+function boundRound(x, y) {
+    if(bounded(x, y)) {
+        return y;
+    }
+
+    return x;
 }
 
 const levelPath = "level1"; //TODO: Update from selection
@@ -69,27 +108,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     const ctx = drawBox.getContext("2d");
     const level = await fetch(`../res/${levelPath}.json`).then(r => r.json()).catch(err => { console.error("Unable to load level data."); console.error(err); });
     const game = new GameState(level);
-    const mouseCoords = { x: undefined, y: undefined };
+    const mouseCoords = { magX: null, magY: null, active: false };
     
     window.onresize = () => resize(game, mouseCoords, ctx);
 
     drawBox.onmousedown = (mouseEvent) => {
         const scaledX = mouseEvent.offsetX / drawBox.width;
         const scaledY = mouseEvent.offsetY / drawBox.height;
+        const magnitude = Math.sqrt(Math.pow(scaledX - game.coords.x, 2) + Math.pow(scaledY - game.coords.y, 2));
 
-        if(Math.sqrt(Math.pow(scaledX - game.coords.x, 2) + Math.pow(scaledY - game.coords.y, 2)) <= game.parameters.radius) {
-            mouseCoords.x = scaledX;
-            mouseCoords.y = scaledY;
-            console.log(mouseCoords.x);
+        if(magnitude <= game.parameters.radius) {
+            mouseCoords.magX = scaledX - game.coords.x;
+            mouseCoords.magY = scaledY - game.coords.y;
+            mouseCoords.active = true;
         }
     };
-    drawBox.onmousemove = (mouseEvent) => { 
-        if(mouseCoords.x && mouseCoords.y) {
-            mouseCoords.x = mouseEvent.offsetX / drawBox.width;
-            mouseCoords.y = mouseEvent.offsetY / drawBox.height;
+    window.onmousemove = (mouseEvent) => {
+        if(mouseCoords.active) {
+            mouseCoords.magX = (mouseEvent.clientX - drawBox.getBoundingClientRect().left) / drawBox.width - game.coords.x;
+            mouseCoords.magY = (mouseEvent.clientY - drawBox.getBoundingClientRect().top) / drawBox.height - game.coords.y;
         }
     };
-    drawBox.onmouseup = () => { mouseCoords.x = undefined; mouseCoords.y = undefined; };
+    window.onmouseup = () => mouseCoords.active = false;
 
     window.requestAnimationFrame(() => update(game, mouseCoords, ctx));
     createSettings(game.parameters);
@@ -128,31 +168,17 @@ function resize(game, mouseCoords, ctx) {
 }
 
 function update(game, mouseCoords, ctx) {
-    const drawBox = document.querySelector("#animation");
-    const lastStep = game.coords;
     let parameters = game.parameters;
 
-    if(mouseCoords.x && mouseCoords.y) {
-        game.force.x = mouseCoords.x - game.coords.x;
-        game.force.y = mouseCoords.y - game.coords.y;
-    }
-    else {
-        // TODO: Update friction and elasticity to use geometry
-        // if() {
-        //     if(game.force.x > 0) {
-        //         game.force.x = Math.max(0, game.force.x - parameters.friction);
-        //     } else if(game.force.x < 0) {
-        //         game.force.x = Math.min(0, game.force.x + parameters.friction);
-        //     }
-        // }
-        if(lastStep.y === game.coords.y && (bounded(parameters.radius, game.coords.y) || bounded(drawBox.height - parameters.radius, game.coords.y))) {
-            game.force.y = -game.force.y * parameters.elasticity;
-        }
-        if(lastStep.x === game.coords.x && (bounded(drawBox.width - parameters.radius, game.coords.x) || bounded(parameters.radius, game.coords.x))) {
-            game.force.x = -game.force.x * parameters.elasticity;
-        }
+    if(mouseCoords.magX && mouseCoords.magY && !mouseCoords.active) {
+        game.force.x = -mouseCoords.magX * sensitivity;
+        game.force.y = -mouseCoords.magY * sensitivity;
+        mouseCoords.magX = null;
+        mouseCoords.magY = null;
     }
 
+    // Add gravity force
+    //TODO: Move to collisionless geometry, add win geometry, add reset button, fix jank with resizing and gravity, minimum drag amount
     if((!mouseCoords.x || !mouseCoords.y) && parameters.gravity !== 0) {
         if(parameters.gravity > 0) {
             const delta = Math.min(parameters.gravity, (1 - parameters.radius) - game.coords.y) / parameters.gravity;
@@ -160,9 +186,6 @@ function update(game, mouseCoords, ctx) {
         } else {
             const delta = Math.max(parameters.gravity, parameters.radius - game.coords.y) / parameters.gravity;
             game.force.y =  game.force.y + delta * parameters.gravity;
-        }
-        if(bounded(0, game.force.y)) {
-            game.force.y = 0;
         }
     }
 
@@ -172,14 +195,14 @@ function update(game, mouseCoords, ctx) {
     game.force.y = Math.max(-parameters.terminalVelocity, Math.min(parameters.terminalVelocity, game.force.y));
 
     game.coords.x = Math.max(Math.min(1 - parameters.radius, game.coords.x + game.force.x), parameters.radius);
-    game.coords.y = Math.max(Math.min(1 - parameters.radius, game.coords.y + game.force.y), parameters.radius);
+    game.coords.y = Math.max(Math.min(1 - parameters.radius * aspectRatio, game.coords.y + game.force.y), parameters.radius * aspectRatio);
 
-    drawGame(game, ctx);
+    drawGame(game, mouseCoords, ctx);
 
     window.requestAnimationFrame(() => update(game, mouseCoords, ctx));
 }
 
-function drawGame(game, ctx) {
+function drawGame(game, mouseCoords, ctx) {
     const drawBox = document.querySelector("#animation");
     ctx.fillStyle = "#acacac";
     ctx.fillRect(0, 0, drawBox.width, drawBox.height);
@@ -196,4 +219,23 @@ function drawGame(game, ctx) {
     ctx.strokeStyle = "#000000";
     ctx.stroke();
     ctx.closePath();
+
+    if(mouseCoords.active) {
+        const angle = Math.atan2(mouseCoords.magY, mouseCoords.magX);
+        const magnitude = -Math.sqrt(Math.pow(mouseCoords.magX, 2) + Math.pow(mouseCoords.magY, 2));
+        ctx.lineWidth = game.parameters.radius * drawBox.width / 2;
+
+        const arrowHeadX = (game.coords.x + Math.cos(angle) * (magnitude - game.parameters.radius * 1.25)) * drawBox.width;
+        const arrowHeadY = (game.coords.y + Math.sin(angle) * aspectRatio * (magnitude - game.parameters.radius * 1.25)) * drawBox.height;
+        ctx.strokeStyle = "#FF333399";
+
+        ctx.beginPath();
+        ctx.moveTo((game.coords.x - Math.cos(angle) * game.parameters.radius * 1.25) * drawBox.width, 
+                   (game.coords.y - Math.sin(angle) * game.parameters.radius * aspectRatio * 1.25) * drawBox.height);
+        ctx.lineTo(arrowHeadX, arrowHeadY);
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.lineWidth = 1.0;
+    }
 }
