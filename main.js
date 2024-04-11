@@ -22,6 +22,9 @@ var scoreoverlay;
 // unused but maybe if i want to continue this i can add difficulty levels and such
 var zombieDamage = 10;
 var zombieCount = 0;
+// track how many health and ammo drops there are
+var healthCount = 0;
+var ammoCount = 0;
 
 const loadingManager = new THREE.LoadingManager();
 const loader = new OBJLoader(loadingManager);
@@ -123,6 +126,7 @@ function animate() {
 	handleAttacks();
 	handleGameOver();
 	spawnZombies();
+	renderer.renderLists.dispose();
 }
 
 function addGround() {
@@ -162,6 +166,7 @@ function addZombie() {
 	const geometry = new THREE.CapsuleGeometry(0.8, 1.2, 4, 8);
 	const material = new THREE.MeshPhongMaterial({color:0x7b9969});
 	const zombie = new THREE.Mesh(geometry, material);
+
 	let x = randomInt(-125,125);
 	let z = randomInt(-125, -50);
 
@@ -182,6 +187,8 @@ function addZombie() {
 	zombie.castShadow = true;
 	scene.add(zombie);
 	zombies.push(zombie);
+	zombieCount++;
+	console.log(zombieCount);
 }
 
 function spawnZombies() {
@@ -190,9 +197,8 @@ function spawnZombies() {
 	// but whatever. people on 60 fps monitors will be chilling while
 	// 144 fps will suffer. also i think movement is FPS based? not sure how
 	// the PointerLockControls work
-	if (rng < 0.004 && zombieCount < 150) {
+	if (rng < 0.01 && zombieCount < 75) {
 		addZombie();
-		zombieCount++;
 	}
 }
 
@@ -249,6 +255,7 @@ function fireGun() {
 		setTimeout(function() {
 			playerGun.remove(sprites["fire"]);
 			playerGun.remove(light);
+			light.dispose();
 		}, 30);
 	}
 }
@@ -271,13 +278,16 @@ function killZombie(zombie) {
 function handleDead() {
 	let handled = [];
 	for (let i=0; i<deadZombies.length; i++) {
-		deadZombies[i].position.y -= 0.075;
-		if (deadZombies[i].position.y <= -1) {
-			scene.remove(deadZombies[i]);
-			dropGoodies(deadZombies[i]);
+		let deadZombie = deadZombies[i];
+		deadZombie.position.y -= 0.075;
+		if (deadZombie.position.y <= -1) {
+			scene.remove(deadZombie);
+			deadZombie.material.dispose();
+			deadZombie.geometry.dispose();
+			deadZombie.remove.apply(deadZombie, deadZombie.children);
+			dropGoodies(deadZombie);
 			//prevent issues from occuring with two in same frame. will do for other handling events.
 			handled.push(i);
-			addZombie();
 		}
 	}
 	for (let i =0; i<handled.length; i++) {
@@ -304,9 +314,13 @@ function dropGoodies(zombie) {
 	let color;
 	if (zombie.userData.drop === "health") {
 		color = 0xff0000;
+		if (healthCount>20) return;
+		healthCount++;
 	}
 	else if (zombie.userData.drop === "ammo") {
 		color = 0xffff00;
+		if (ammoCount >20) return;
+		ammoCount++;
 	}
 	else {
 		console.log("should never happen!");
@@ -323,6 +337,7 @@ function dropGoodies(zombie) {
 	let light = new THREE.PointLight(color, 5, 0, 2);
 	light.castShadow = true;
 	light.position.set(0,-0.9,0);
+	light.name = "dropLight";
 	mesh.add(light);
 	
 	drops.push(mesh);
@@ -332,9 +347,11 @@ function handleDrops() {
 	let handled = [];
 	for (let i = 0; i<drops.length; i++) {
 		if(isAgentProximity(drops[i], 1.2)) {
-			let dropType = drops[i].userData.drop;
+			let drop = drops[i]
+			let dropType = drop.userData.drop;
 			if (dropType === "health") {
 				if (agent.health >= 150) continue;
+				healthCount--;
 				if (agent.health <= 30) {
 					healthoverlay.classList.remove("healthCritical");
 				}
@@ -344,6 +361,7 @@ function handleDrops() {
 				}
 			}
 			if (dropType === "ammo") {
+				ammoCount--;
 				agent.ammunition += 30;
 			}
 
@@ -353,7 +371,11 @@ function handleDrops() {
 			sound.setLoop(false);
 			sound.setVolume(1);
 			sound.play();
-			scene.remove(drops[i]);
+			scene.remove(drop);
+			drop.geometry.dispose();
+			drop.material.dispose();
+			drop.getObjectByName("dropLight").dispose();
+			drop.remove.apply(drop, drop.children);
 			handled.push(i);
 		}
 	}
