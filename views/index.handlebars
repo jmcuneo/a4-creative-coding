@@ -1,13 +1,21 @@
-<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    <p>
-        Hello world!
-    </p>
-</body>
+    <script type="importmap">
+      { "imports": { "tweakpane":
+      "https://cdn.jsdelivr.net/npm/tweakpane@4.0.3/dist/tweakpane.min.js" } }
+    </script>
+    <script type="module" src="js/main.js"></script>
+
+    <!-- get rid of favicon error -->
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  </head>
+  <body>
+    <h1>
+      Hello world!
+    </h1>
+    <button type="button">Play!</button>
+  </body>
 </html>
