@@ -3,6 +3,8 @@
 
 http://a4-nicholaswhalen.glitch.me
 
+UPDATE: MY PROJECT ONLY WORKS ON FIREFOX. 
+
 
 My goal was to create a basic audio visualization for a song. I have experience working with audio and the frequency spectrum, so I thought this would be a good fit for my project. I used THREE.js to create my visualization. The main challenges I faced were learning how to use THREE.js, as I have no previous experience with it, however, I had a good idea of what I needed to actually do to accomplish my goal because of my past experience. 
 
