@@ -38,7 +38,12 @@ const start = function() {
 
     // Link to music file, may have to adjust when hosted
     const fileInput = document.getElementById('fileInput');
-    if (fileInput.files.length > 0) {
+    if(backgroundColor === "#e6b96f" && columnColor === "#cc213c"){ // 230 185 111 204 33 60
+        audioElement.src = './DrumsOfLiberation.mp3';
+        document.body.style.backgroundColor = "white"
+        changeTextColors("#b46aaf")
+    }
+    else if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
         const reader = new FileReader();
 
@@ -53,11 +58,7 @@ const start = function() {
     else {
         audioElement.src = './attss.mp3';
     }
-    if(backgroundColor === "#e6b96f" && columnColor === "#cc213c"){ // 230 185 111 204 33 60
-        audioElement.src = './DrumsOfLiberation.mp3';
-        document.body.style.backgroundColor = "white"
-        changeTextColors("#b46aaf")
-    }
+
 
 
     audioElement.play();
