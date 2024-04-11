@@ -1,0 +1,15 @@
+{
+  "name": "boid simulation",
+  "version": "1.0.0",
+  "description": "A program that simulates flocking behaviour of animals like birds or fish",
+  "author": "Jayson Caissie",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express":  "^4.16.4"
+  },
+  "engines": {
+    "node": "16.x"
+  }
+}
