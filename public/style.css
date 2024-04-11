@@ -47,4 +47,41 @@ input[type=range] {
     top: -5px;
     left: -5px;
 }
+.vertical-slider {
+    writing-mode: vertical-lr;
+    position: absolute;
+    right:570px;
+    transform: rotate(180deg);
+}
 
+.canvasContainer {
+    display: flex;
+    justify-content: center; /* Horizontally centers items */
+    align-items: center; /* Vertically centers items */
+}
+
+.canvasWrapper {
+    position: relative;
+}
+.popup {
+    display: none;
+    position: fixed;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 999;
+    width: 70%;
+    height: 70%;
+}
+.popup-content {
+    position: relative;
+    color: black;
+}
+
+.close-btn {
+    position: relative;
+    top: 4%;
+    left: 96%;
+    font-size: 40px;
+    cursor: pointer;
+}

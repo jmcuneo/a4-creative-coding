@@ -4,6 +4,19 @@ let columnColor
 let coloredPageBackground = true
 let barCount = 1024
 
+document.addEventListener('DOMContentLoaded', function() {
+    const popup = document.getElementById('info');
+    // Show popup on page load
+    popup.style.display = 'block';
+
+    // Close popup when clicked outside
+    document.addEventListener('click', function(event) {
+        if (!popup.contains(event.target) && popup.style.display === 'block') {
+            popup.style.display = 'none';
+        }
+    });
+});
+
 const start = function() {
     if(audioElement)audioElement.pause()
     const canvas = document.getElementById('visualizer');
@@ -13,6 +26,8 @@ const start = function() {
     const audioCtx = new AudioContext();
     audioElement = document.createElement('audio');
     document.body.appendChild(audioElement);
+
+    audioElement.crossOrigin = 'anonymous'
 
     // audio graph setup
     const analyser = audioCtx.createAnalyser();
@@ -69,7 +84,8 @@ const start = function() {
 
         for (let i = 0; i < bufferLength; i++) {
             // TODO: Add bar size adjustment with values ranging from /2 to *1.75
-            barHeight = dataArray[i] * 1.25;
+
+            barHeight = dataArray[i] * (1 + (document.getElementById("verticalSlider").value*0.01));
 
             ctx.fillRect(x, canvas.height - barHeight / 2, barWidth, barHeight);
 
@@ -169,6 +185,7 @@ function toggleVariable() {
 
 
 window.onload = () => {
+
     setColors()
     document.getElementById('startButton').onclick = start;
     document.getElementById('stopButton').onclick = stop;
