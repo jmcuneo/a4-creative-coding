@@ -1,5 +1,10 @@
 import { Pane } from "tweakpane";
 
+const PARAMS = {
+  factor: 123,
+  color: { r: 255, g: 0, b: 55 },
+};
+
 // Creates audio context, audio element, analyser
 // Plays audio and returns analyser
 const setupAudio = function () {
@@ -40,9 +45,8 @@ const play = function () {
     window.requestAnimationFrame(draw);
 
     const ctx = clearCanvas();
-
     ctx.fillStyle = "white";
-    //ctx.fillStyle = pane.color;
+    ctx.fillStyle = `rgb(${PARAMS.color.r}, ${PARAMS.color.g}, ${PARAMS.color.b})`;
     analyser.getByteFrequencyData(results);
 
     for (let i = 0; i < analyser.frequencyBinCount; i++) {
@@ -62,13 +66,7 @@ window.onload = async function () {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  const PARAMS = {
-    factor: 123,
-    color: "#ff0055",
-  };
-
   const pane = new Pane({ title: "Controls" });
-
   pane.addBinding(PARAMS, "factor");
   pane.addBinding(PARAMS, "color");
 
