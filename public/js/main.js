@@ -1,13 +1,15 @@
 import { Pane } from "tweakpane";
 
-const play = function () {
+// Creates audio context, audio element, analyser
+// Plays audio and returns analyser
+const setupAudio = function () {
   const audioCtx = new AudioContext();
 
   const audioElement = document.createElement("audio");
   document.body.appendChild(audioElement);
 
   const analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 1024;
+  analyser.fftSize = 2048;
 
   const player = audioCtx.createMediaElementSource(audioElement);
   player.connect(audioCtx.destination);
@@ -16,17 +18,31 @@ const play = function () {
   audioElement.src = "./test-audio.wav";
   audioElement.play();
 
+  return analyser;
+};
+
+// Clears the canvas and returns the context
+const clearCanvas = function () {
+  const canvas = document.querySelector("canvas");
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  return ctx;
+};
+
+const play = function () {
+  const analyser = setupAudio();
+
   const results = new Uint8Array(analyser.frequencyBinCount);
 
   const draw = function () {
     window.requestAnimationFrame(draw);
 
-    const canvas = document.querySelector("canvas");
-    const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const ctx = clearCanvas();
 
     ctx.fillStyle = "white";
+    //ctx.fillStyle = pane.color;
     analyser.getByteFrequencyData(results);
 
     for (let i = 0; i < analyser.frequencyBinCount; i++) {
