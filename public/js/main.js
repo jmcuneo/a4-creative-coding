@@ -46,5 +46,15 @@ window.onload = async function () {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  const PARAMS = {
+    factor: 123,
+    color: "#ff0055",
+  };
+
+  const pane = new Pane({ title: "Controls" });
+
+  pane.addBinding(PARAMS, "factor");
+  pane.addBinding(PARAMS, "color");
+
   document.querySelector("button").onclick = play;
 };
