@@ -15,3 +15,11 @@ This app uses D3 and the data from https://raw.githubusercontent.com/prust/wikip
 
 ## Images:
 
+- Line Charts
+![Line CHarts](img/CS4241_A4_LineCharts.JPG)
+
+- Bar Chart
+![Bar Chart](img/CS4241_A4_BarChart.JPG)
+
+- Bubble Chart
+![Bubble Chart](img/CS4241_A4_BubbleChart.JPG)
