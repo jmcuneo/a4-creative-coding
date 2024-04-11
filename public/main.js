@@ -5,6 +5,7 @@ let coloredPageBackground = true
 let barCount = 1024
 
 const start = function() {
+    if(audioElement)audioElement.pause()
     const canvas = document.getElementById('visualizer');
     const ctx = canvas.getContext('2d');
 
@@ -15,15 +16,35 @@ const start = function() {
 
     // audio graph setup
     const analyser = audioCtx.createAnalyser();
-    analyser.fftSize = barCount; // 512 bins
+    analyser.fftSize = barCount; // Variable number, has to be power of 2
     const player = audioCtx.createMediaElementSource(audioElement);
     player.connect(audioCtx.destination);
     player.connect(analyser);
 
-    // make sure, for this example, that your audio file is accessible
-    // from your server's root directory... here we assume the file is
-    // in the same location as our index.html file
-    audioElement.src = './attss.mp3';
+    // Link to music file, may have to adjust when hosted
+    const fileInput = document.getElementById('fileInput');
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            // Set the source of the audio element to the data URL representing the file content
+            audioElement.src = e.target.result;
+            // Load and play the audio
+
+        }
+        reader.readAsDataURL(file);
+    }
+    else {
+        audioElement.src = './attss.mp3';
+    }
+    if(backgroundColor === "#e6b96f" && columnColor === "#cc213c"){ // 230 185 111 204 33 60
+        audioElement.src = './DrumsOfLiberation.mp3';
+        document.body.style.backgroundColor = "white"
+        changeTextColors("#b46aaf")
+    }
+
+
     audioElement.play();
 
     const dataArray = new Uint8Array(analyser.frequencyBinCount);
@@ -32,12 +53,11 @@ const start = function() {
         // temporal recursion, call the function in the future
         window.requestAnimationFrame(draw);
 
-        // fill our canvas with a black box
-        // by doing this every frame we 'clear' the canvas
+        // Fill canvas background
         ctx.fillStyle = backgroundColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // set the color to white for drawing our visualization
+        // Set Bar Color
         ctx.fillStyle = columnColor;
 
         analyser.getByteFrequencyData(dataArray);
@@ -48,7 +68,8 @@ const start = function() {
         let x = 0;
 
         for (let i = 0; i < bufferLength; i++) {
-            barHeight = dataArray[i];
+            // TODO: Add bar size adjustment with values ranging from /2 to *1.75
+            barHeight = dataArray[i] * 1.25;
 
             ctx.fillRect(x, canvas.height - barHeight / 2, barWidth, barHeight);
 
@@ -63,7 +84,7 @@ const stop = function() {
     audioElement.pause();
 };
 
-function updateValue() {
+function adjustBarCount() {
     let sliderValue = document.getElementById("barSlider").value;
     barCount = Math.pow(2, sliderValue);
 }
@@ -153,5 +174,5 @@ window.onload = () => {
     document.getElementById('stopButton').onclick = stop;
     document.getElementById('colorSubmit').onclick = setColors;
     document.getElementById("toggleButton").onclick = toggleVariable;
-    document.getElementById("barSlider").addEventListener("input", updateValue);
+    document.getElementById("barSlider").addEventListener("input", adjustBarCount);
 }

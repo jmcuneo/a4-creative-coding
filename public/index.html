@@ -10,6 +10,9 @@
 <div class="container">
     <h1 id="header">Audio Visualizer</h1>
 
+    <input type="file" id="fileInput" accept="audio/*">
+
+
     <canvas id="visualizer" width="800" height="200"></canvas>
 
     <div class="buttonContainer">
@@ -19,7 +22,7 @@
 
     <div class="colorFormContainer">
         <div class="colorForm">
-            <label for="backgroundColorPicker">Background color:</label>
+            <label for="backgroundColorPicker">Canvas color:</label>
             <input type="color" id="backgroundColorPicker" name="backgroundColorPicker">
         </div>
         <div class="colorForm">
@@ -27,11 +30,11 @@
             <input type="color" id="columnColorPicker" name="columnColorPicker" value="#ffffff">
         </div>
     </div>
-    <button id="colorSubmit">Submit</button>
+    <button id="colorSubmit">Change Colors</button>
 
     <button id="toggleButton">Background Color On</button>
 
-    <input type="range" id="barSlider" min="6" max="13" value="10" step="1">
+    <input type="range" id="barSlider" min="6" max="12" value="10" step="1">
     <div class="slider-labels">
         <label>64</label>
         <label>128</label>
@@ -40,7 +43,6 @@
         <label>1024</label>
         <label>2048</label>
         <label>4096</label>
-        <label>8192</label>
     </div>
 
 
