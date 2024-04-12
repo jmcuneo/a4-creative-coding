@@ -1,27 +1,44 @@
+// CDN Tweakpane import
 import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane@4.0.3/dist/tweakpane.min.js'
 let noise = new SimplexNoise();
+/**
+ * @function vizInit
+ * @description This function initializes the audio context and creates the 3D visualization of the audio file
+ * @param {void}
+ * @returns {void}
+ */
 let vizInit = function (){
 
     let file = document.getElementById("audioFile");
     let audio = document.getElementById("audio");
     let fileLabel = document.querySelector("label.file");
-
+// document onload is used to play the audio file as soon as the page loads
     document.onload = function(e){
         console.log(e);
         audio.play();
         play();
     }
+// file.onchange is used to play the audio file as soon as the file is selected
     file.onchange = function(){
         fileLabel.classList.add('normal');
         audio.classList.add('active');
         let files = this.files;
-
+// audio.src is used to create a URL for the selected file
         audio.src = URL.createObjectURL(files[0]);
         audio.load();
         audio.play();
         play();
     }
 
+    /**
+     * @function play
+     * @description This function creates the 3D visualization of the audio file.
+     * It uses the Web Audio API.
+     * It creates a scene, camera, renderer, and adds the audio file to the scene.
+     * It also creates a plane, ball, and light sources to create the 3D visualization.
+     * @param {void}
+     * @returns {void}
+     */
     function play() {
         let context = new AudioContext();
         let src = context.createMediaElementSource(audio);
@@ -47,17 +64,17 @@ let vizInit = function (){
             side: THREE.DoubleSide,
             wireframe: true
         });
-
+// The plane is used to create the ground for the 3D visualization
         let plane = new THREE.Mesh(planeGeometry, planeMaterial);
         plane.rotation.x = -0.5 * Math.PI;
         plane.position.set(0, 30, 0);
         group.add(plane);
-
+// The plane2 is used to create the ground for the 3D visualization
         let plane2 = new THREE.Mesh(planeGeometry, planeMaterial);
         plane2.rotation.x = -0.5 * Math.PI;
         plane2.position.set(0, -30, 0);
         group.add(plane2);
-
+// The icosahedronGeometry is used to create the ball for the 3D visualization
         let icosahedronGeometry = new THREE.IcosahedronGeometry(10, 4);
         let lambertMaterial = new THREE.MeshLambertMaterial({
             color: 0x0,
@@ -86,6 +103,14 @@ let vizInit = function (){
 
         render();
 
+        /**
+         * @function render
+         * @description This function renders the 3D visualization of the audio file.
+         * It uses the analyser to get the frequency data of the audio file.
+         * It then creates the 3D visualization based on the frequency data.
+         * @param {void}
+         * @returns {void}
+         */
         function render() {
             analyser.getByteFrequencyData(dataArray);
 
@@ -113,12 +138,27 @@ let vizInit = function (){
             requestAnimationFrame(render);
         }
 
+        /**
+         * @function onWindowResize
+         * @description This function is called when the window is resized.
+         * It updates the camera aspect ratio and renderer size.
+         * @param {void}
+         * @returns {void}
+         */
         function onWindowResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
-
+    /**
+     * @function makeRoughBall
+     * @description This function creates a rough ball based on the frequency data of the audio file.
+     * It uses SimplexNoise to create the rough ball.
+     * @param {object} mesh - The mesh object of the ball
+     * @param {number} bassFr - The bass frequency of the audio file
+     * @param {number} treFr - The treble frequency of the audio file
+     * @returns {void}
+     */
         function makeRoughBall(mesh, bassFr, treFr) {
             mesh.geometry.vertices.forEach(function (vertex, i) {
                 let offset = mesh.geometry.parameters.radius;
@@ -135,6 +175,14 @@ let vizInit = function (){
             mesh.geometry.computeFaceNormals();
         }
 
+        /**
+         * @function makeRoughGround
+         * @description This function creates a rough ground based on the frequency data of the audio file.
+         * It uses SimplexNoise to create the rough ground.
+         * @param {object} mesh - The mesh object of the ground
+         * @param {number} distortionFr - The distortion frequency of the audio file
+         * @returns {void}
+         */
         function makeRoughGround(mesh, distortionFr) {
             mesh.geometry.vertices.forEach(function (vertex, i) {
                 let amp = 2;
@@ -151,31 +199,69 @@ let vizInit = function (){
         audio.play();
     };
 }
-
+// The vizInit function is called when the window loads
 window.onload = vizInit();
 
 document.body.addEventListener('touchend', function(ev) { context.resume(); });
 
+/**
+ * @function fractionate
+ * @description This function calculates the fraction of a value between a minimum and maximum value.
+ * @param {number} val - The value to calculate the fraction of
+ * @param {number} minVal - The minimum value
+ * @param {number} maxVal - The maximum value
+ * @returns {number} - The fraction of the value between the minimum and maximum value
+ */
 function fractionate(val, minVal, maxVal) {
     return (val - minVal)/(maxVal - minVal);
 }
 
+/**
+ * @function modulate
+ * @description This function modulates a value between a minimum and maximum value to another minimum and maximum value.
+ * @param {number} val - The value to modulate
+ * @param {number} minVal - The minimum value
+ * @param {number} maxVal - The maximum value
+ * @param {number} outMin - The minimum output value
+ * @param {number} outMax - The maximum output value
+ * @returns {number} - The modulated value
+ */
 function modulate(val, minVal, maxVal, outMin, outMax) {
     let fr = fractionate(val, minVal, maxVal);
     let delta = outMax - outMin;
     return outMin + (fr * delta);
 }
 
+/**
+ * @function avg
+ * @description This function calculates the average of an array of numbers.
+ * It uses the reduce function to sum all the numbers in the array and then divides the sum by the length of the array.
+ * @param {array} arr - The array of numbers
+ * @returns {number} - The average of the array of numbers
+ */
 function avg(arr){
     let total = arr.reduce(function(sum, b) { return sum + b; });
     return (total / arr.length);
 }
 
+/**
+ * @function max
+ * @description This function calculates the maximum value of an array of numbers.
+ * It uses the reduce function to find the maximum value in the array.
+ * @param {array} arr - The array of numbers
+ * @returns {number} - The maximum value in the array of numbers
+ */
+
 function max(arr){
     return arr.reduce(function(a, b){ return Math.max(a, b); })
 }
 const pane = new Pane();
-
+/**
+ * @constant PARAMS
+ * @description This constant object stores the parameters for the Tweakpane library.
+ * The parameters are used to control the 3D visualization of the audio file.
+ * The parameters include the factor, title, color, percentage, theme, volume, ArtistName, and Genre.
+ */
 const PARAMS = {
     factor: 123,
     title: '3D Song Visualization',
@@ -192,6 +278,14 @@ pane.addBinding(PARAMS, 'Genre', { min: 0, max: 100, step: 10 });
 const volumeBinding = pane.addBinding(PARAMS, 'volume', { min: 0, max: 1, step: 0.1 });
 pane.addBinding(PARAMS, 'percentage', { min: 0, max: 100, step: 10 });
 pane.addBinding(PARAMS, 'factor', { min: 0, max: 100, step: 10 });
+/**
+ * @function on
+ * @description This function listens for changes in the volume parameter.
+ * When the volume parameter changes, the audio volume is updated.
+ * @param {string} change - The change event
+ * @param {function} callback - The callback function to update the audio volume
+ * @returns {void}
+ */
 volumeBinding.on('change', (ev) => {
     audio.volume = ev.value;
 });
