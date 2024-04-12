@@ -182,10 +182,12 @@ const PARAMS = {
     color: '#ff0055',
     percentage: 50,
     theme: 'dark',
-    volume: 0.5 // Add this line
+    volume: 0.5 ,
+    ArtistName: '',
+    Genre: ''
 };
-pane.addBinding(PARAMS, 'Title', { min: 0, max: 100, step: 10 });
-pane.addBinding(PARAMS, 'Artist Name', { min: 0, max: 100, step: 10 });
+pane.addBinding(PARAMS, 'title', { min: 0, max: 100, step: 10 });
+pane.addBinding(PARAMS, 'ArtistName', { min: 0, max: 100, step: 10 });
 pane.addBinding(PARAMS, 'Genre', { min: 0, max: 100, step: 10 });
 const volumeBinding = pane.addBinding(PARAMS, 'volume', { min: 0, max: 1, step: 0.1 });
 pane.addBinding(PARAMS, 'percentage', { min: 0, max: 100, step: 10 });
