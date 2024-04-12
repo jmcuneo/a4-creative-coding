@@ -1,0 +1,12 @@
+{
+  "name": "golf",
+  "version": "1.0.0",
+  "description": "Assignment 4 - creative coding - for WPI CS 4241",
+  "author": "Andrew Salls",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

@@ -1,0 +1,152 @@
+{
+    "start": {
+        "x": 10,
+        "y": 90
+    },
+    "parameters": {
+
+    },
+    "geometry": [
+        {
+            "x": 0,
+            "y": 0,
+            "width": 20,
+            "height": 100,
+            "type": "grav"
+        },
+        {
+            "x": 20,
+            "y": 0,
+            "width": 20,
+            "height": 100,
+            "type": "antigrav"
+        },
+        {
+            "x": 40,
+            "y": 0,
+            "width": 20,
+            "height": 100,
+            "type": "grav"
+        },
+        {
+            "x": 60,
+            "y": 0,
+            "width": 20,
+            "height": 100,
+            "type": "antigrav"
+        },
+        {
+            "x": 80,
+            "y": 0,
+            "width": 20,
+            "height": 100,
+            "type": "grav"
+        },
+        {
+            "x": 93,
+            "y": 90,
+            "width": 7,
+            "height": 10,
+            "type": "win"
+        },
+        {
+            "x": 0,
+            "y": 0,
+            "width": 100,
+            "height": 1,
+            "elasticity": 0.3,
+            "friction": 0.8,
+            "type": "wall"
+        },
+        {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 100,
+            "elasticity": 0.3,
+            "friction": 0.8,
+            "type": "wall"
+        },
+        {
+            "x": 0,
+            "y": 99,
+            "width": 100,
+            "height": 1,
+            "elasticity": 0.3,
+            "friction": 0.8,
+            "type": "wall"
+        },
+        {
+            "x": 99,
+            "y": 0,
+            "width": 1,
+            "height": 100,
+            "elasticity": 0.3,
+            "friction": 0.8,
+            "type": "wall"
+        },
+        {
+            "x": 27,
+            "y": 0,
+            "width": 6,
+            "height": 20,
+            "elasticity": 0.3,
+            "friction": 0.8,
+            "type": "wall" 
+        },
+        {
+            "x": 27,
+            "y": 40,
+            "width": 6,
+            "height": 60,
+            "elasticity": 0.3,
+            "friction": 0.8,
+            "type": "wall" 
+        },
+        {
+            "x": 47,
+            "y": 0,
+            "width": 6,
+            "height": 70,
+            "elasticity": 0.3,
+            "friction": 0.8,
+            "type": "wall" 
+        },
+        {
+            "x": 47,
+            "y": 90,
+            "width": 6,
+            "height": 10,
+            "elasticity": 0.3,
+            "friction": 0.8,
+            "type": "wall" 
+        },
+        {
+            "x": 67,
+            "y": 0,
+            "width": 6,
+            "height": 40,
+            "elasticity": 0.3,
+            "friction": 0.8,
+            "type": "wall" 
+        },
+        {
+            "x": 67,
+            "y": 60,
+            "width": 6,
+            "height": 40,
+            "elasticity": 0.3,
+            "friction": 0.8,
+            "type": "wall" 
+        },
+        {
+            "x": 87,
+            "y": 30,
+            "width": 6,
+            "height": 70,
+            "elasticity": 0.3,
+            "friction": 0.8,
+            "type": "wall" 
+        }
+    ]
+}

@@ -1,0 +1,47 @@
+<!doctype HTML>
+<html lang="en">
+
+<head>
+  <title>CS4241 Assignment 1</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="./css/index.css">
+  <script type="text/javascript" src="./js/index.js"></script>
+  <script type="text/javascript" src="./js/anim.js"></script>
+</head>
+
+<body>
+  <div id="animation-options-wrapper">
+    <p>Click and drag the ball to aim, release to fire. Get in the green area to win the level!</p>
+    <div id="options" class="center">
+      <button id="level1" type="button" value="level1">Level 1</button>
+      <button id="level2" type="button" value="level2">Level 2</button>
+      <button id="level3" type="button" value="level3">Level 3</button>
+      <button id="reset" type="button" value="reset">Reset</button>
+    </div>
+  </div>
+  <div id="ball-options" class="center">
+    <div class="center">
+      <label for="radius">Radius: </label>
+      <input type="number" name="radius" id="radius" min="1" max="100"  step="0.000001">
+    </div>
+    <div class="center">
+      <label for="gravity">Gravity: </label>
+      <input type="number" name="gravity" id="gravity" min="0" max="1"  step="0.000001">
+    </div>
+    <div class="center">
+      <label for="terminalVelocity">Max Velocity: </label>
+      <input type="number" name="terminalVelocity" id="terminalVelocity" min="0" max="1" step="0.000001">
+    </div>
+    <div class="center">
+      <label for="color">Ball color: </label>
+      <input type="color" name="color" id="color">
+    </div>
+  </div>
+  <div id="no-align" class="center">
+    <div id="animation-wrapper">
+      <canvas id="animation"></canvas>
+    </div>
+  </div>
+</body>
+
+</html>
