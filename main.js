@@ -11,6 +11,7 @@ var sounds = {};
 var zombies = [];
 var deadZombies = [];
 var drops = [];
+var materials = {};
 var loaded = false;
 var lmb = false;
 var firecooldown = false;
@@ -68,7 +69,7 @@ function init() {
 	renderer.shadowMap.type = THREE.BasicShadowMap;
 	var ambience = new THREE.AmbientLight(0xffffff, 0.2);
 	scene.add(ambience);
-	addZombie();
+	loadZombie();
 
 	pauseoverlay.addEventListener("click", function() {
 		controls.lock();
@@ -162,10 +163,18 @@ function loadSounds() {
 	});
 }
 
-function addZombie() {
+function loadZombie() {
 	const geometry = new THREE.CapsuleGeometry(0.8, 1.2, 4, 8);
 	const material = new THREE.MeshPhongMaterial({color:0x7b9969});
+	const materialDead = new THREE.MeshPhongMaterial({color:0xff0000});
 	const zombie = new THREE.Mesh(geometry, material);
+	
+	meshes.zombie = zombie;
+	materials.deadzombie = materialDead;
+}
+
+function addZombie() {
+	const zombie = meshes["zombie"].clone();
 
 	let x = randomInt(-125,125);
 	let z = randomInt(-125, -50);
@@ -188,7 +197,6 @@ function addZombie() {
 	scene.add(zombie);
 	zombies.push(zombie);
 	zombieCount++;
-	console.log(zombieCount);
 }
 
 function spawnZombies() {
@@ -234,7 +242,8 @@ function fireGun() {
 					zombie.userData.health--;
 
 					if (zombie.userData.health <= 0) {
-						zombie.material.color.set(0xff0000);
+						zombie.material.dispose();
+						zombie.material = materials["deadzombie"];
 						killZombie(zombie);
 					}
 				}
@@ -243,7 +252,8 @@ function fireGun() {
 				let zombie = intersections[0].object
 				zombie.userData.health--;
 				if (zombie.userData.health <= 0) {
-					zombie.material.color.set(0xff0000);
+					zombie.material.dispose();
+					zombie.material = materials["deadzombie"];
 					killZombie(zombie);
 				}
 			}
@@ -269,10 +279,17 @@ function killZombie(zombie) {
 			deadZombies.push(zombie);
 		}
 	}
+	// sort greatest to least to prevent order of elements from changing 
+	killed.sort(function(a,b) {
+		return b-a;
+	});
 	for (let i =0; i<killed.length; i++) {
 		zombies.splice(killed[i], 1);
 	}
 	zombieCount--;
+	console.log("dzl: " + deadZombies.length);
+	console.log("zl: " + zombies.length);
+	console.log(zombieCount);
 }
 
 function handleDead() {
@@ -290,6 +307,10 @@ function handleDead() {
 			handled.push(i);
 		}
 	}
+	// sort greatest to least to prevent order of elements from changing 
+	handled.sort(function(a,b) {
+		return b-a;
+	});
 	for (let i =0; i<handled.length; i++) {
 		deadZombies.splice(handled[i], 1);
 	}
@@ -347,7 +368,9 @@ function handleDrops() {
 	let handled = [];
 	for (let i = 0; i<drops.length; i++) {
 		if(isAgentProximity(drops[i], 1.2)) {
-			let drop = drops[i]
+			console.log(i);
+			let drop = drops[i];
+			console.log(drop);
 			let dropType = drop.userData.drop;
 			if (dropType === "health") {
 				if (agent.health >= 150) continue;
@@ -379,6 +402,10 @@ function handleDrops() {
 			handled.push(i);
 		}
 	}
+	// sort greatest to least to prevent order of elements from changing 
+	handled.sort(function(a,b) {
+		return b-a;
+	});
 	for (let i = 0; i<handled.length; i++) {
 		drops.splice(handled[i], 1);
 	}
