@@ -5,7 +5,7 @@ cs 4241 Assignment 4 - Creative Coding: Interactive Multimedia Experiences
 
 Name: Ronak Wani
 
-Link: https://a4-ronakwani.glitch.me
+Link: https://a4-ronak-wani.glitch.me
 
 Include a very brief summary of your project here. Images are encouraged when needed, along with concise, high-level text. Be sure to include:
 
