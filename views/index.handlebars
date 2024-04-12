@@ -1,0 +1,89 @@
+<html lang="en">
+  <head>
+    <title>CS4241 A4</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script type="importmap">
+      { "imports": { "tweakpane":
+      "https://cdn.jsdelivr.net/npm/tweakpane@4.0.3/dist/tweakpane.min.js" } }
+    </script>
+    <script type="module" src="js/main.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/base-min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
+      integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="css/main.css" />
+    <style>
+      :root { --tp-base-background-color: hsla(0, 0%, 10%, 0.80);
+      --tp-base-shadow-color: hsla(0, 0%, 0%, 0.20);
+      --tp-button-background-color: hsla(0, 0%, 80%, 1.00);
+      --tp-button-background-color-active: hsla(0, 0%, 100%, 1.00);
+      --tp-button-background-color-focus: hsla(0, 0%, 95%, 1.00);
+      --tp-button-background-color-hover: hsla(0, 0%, 85%, 1.00);
+      --tp-button-foreground-color: hsla(0, 0%, 0%, 0.80);
+      --tp-container-background-color: hsla(0, 0%, 0%, 0.30);
+      --tp-container-background-color-active: hsla(0, 0%, 0%, 0.60);
+      --tp-container-background-color-focus: hsla(0, 0%, 0%, 0.50);
+      --tp-container-background-color-hover: hsla(0, 0%, 0%, 0.40);
+      --tp-container-foreground-color: hsla(0, 0%, 100%, 0.50);
+      --tp-groove-foreground-color: hsla(0, 0%, 0%, 0.20);
+      --tp-input-background-color: hsla(0, 0%, 0%, 0.30);
+      --tp-input-background-color-active: hsla(0, 0%, 0%, 0.60);
+      --tp-input-background-color-focus: hsla(0, 0%, 0%, 0.50);
+      --tp-input-background-color-hover: hsla(0, 0%, 0%, 0.40);
+      --tp-input-foreground-color: hsla(0, 0%, 100%, 0.50);
+      --tp-label-foreground-color: hsla(0, 0%, 100%, 0.50);
+      --tp-monitor-background-color: hsla(0, 0%, 0%, 0.30);
+      --tp-monitor-foreground-color: hsla(0, 0%, 100%, 0.30); }
+    </style>
+
+    <!-- get rid of favicon error -->
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="pure-g">
+        <div class="pure-u-1-5">
+          <a class="pure-menu-heading" href="/about">About</a>
+        </div>
+        <div class="pure-u-3-5 header-title">
+          <h1 class="pure-menu-heading">Music Visualization</h1>
+        </div>
+      </div>
+    </div>
+    <div class="content center">
+      <div class="pure-g">
+        <div class="pure-u-1">
+          <canvas width="512" height="512"></canvas>
+        </div>
+        <div class="pure-u-1-4">
+            </div>
+        <div class="pure-u-1-4">
+          <button
+            type="button"
+            data-playing="false"
+            class="pure-button button-play"
+          >Play/Pause</button>
+        </div>
+        <div class="pure-u-1-4">
+          <button
+            id="btn_stop"
+            type="button"
+            class="pure-button button-stop"
+          >Stop</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer center">
+        <p>Created by Joel Hokkanen for CS4241 at WPI</p>
+    </div>
+  </body>
+</html>

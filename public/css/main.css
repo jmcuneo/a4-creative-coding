@@ -1,0 +1,52 @@
+.center {
+  margin: auto;
+  width: 50%;
+  text-align: center;
+}
+
+body {
+  background-color: rgb(229, 225, 233);
+}
+
+canvas {
+  border: solid;
+  border-width: 2px;
+}
+
+.button-play,
+.button-stop {
+  border-radius: 4px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.button-play {
+  background-color: #61d095;
+}
+
+.button-stop {
+  background-color: #c1666b;
+}
+
+.header {
+  background: #c1666b;
+  color: #fff;
+  padding: 1em;
+}
+
+.pure-menu-heading {
+  color: white;
+  font-weight: 400;
+  font-size: 120%;
+}
+
+a:hover, a:focus {
+  color: rgb(219, 202, 239);
+}
+
+.header-title {
+  text-align: center;
+}
+
+.content {
+  padding: 1em;
+}
