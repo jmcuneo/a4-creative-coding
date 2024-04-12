@@ -9,8 +9,7 @@ This appplication makes a visualization of an audio file as it plays but showing
 
 Music Credits:
 All music was sourced from freemusicarchive.org with CC BY-NC-ND license
-
-Ersatz - The Easton Ellises
-New World - DJ Messagroove
-Fourth Track - A. Cooper
-Owl Eyes - The Pop Winds
+* Ersatz - The Easton Ellises
+* New World - DJ Messagroove
+* Fourth Track - A. Cooper
+* Owl Eyes - The Pop Winds
