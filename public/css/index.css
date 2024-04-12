@@ -23,12 +23,7 @@ html, body{
     color: var(--textColor);
     font-family: Verdana, serif;
     font-weight: bold;
-    /*font-family: 'Saira', sans-serif;*/
     position: relative;
-}
-
-body {
-    background: linear-gradient(135deg, var(--bgColor), var(--bgColorLight));
 }
 
 *{

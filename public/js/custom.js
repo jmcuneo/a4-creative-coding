@@ -84,7 +84,6 @@ let vizInit = function (){
         let ball = new THREE.Mesh(icosahedronGeometry, lambertMaterial);
         ball.position.set(0, 0, 0);
         group.add(ball);
-
         let ambientLight = new THREE.AmbientLight(0xaaaaaa);
         scene.add(ambientLight);
 
@@ -267,10 +266,12 @@ const PARAMS = {
     title: '3D Song Visualization',
     color: '#ff0055',
     percentage: 50,
-    theme: 'dark',
+    theme: '',
     volume: 0.5 ,
     ArtistName: '',
-    Genre: ''
+    Genre: '',
+    background: {r: 13, g: 175, b: 173},
+    ball: {r:0,g:0,b:0},
 };
 pane.addBinding(PARAMS, 'title', { min: 0, max: 100, step: 10 });
 pane.addBinding(PARAMS, 'ArtistName', { min: 0, max: 100, step: 10 });
@@ -278,6 +279,8 @@ pane.addBinding(PARAMS, 'Genre', { min: 0, max: 100, step: 10 });
 const volumeBinding = pane.addBinding(PARAMS, 'volume', { min: 0, max: 1, step: 0.1 });
 pane.addBinding(PARAMS, 'percentage', { min: 0, max: 100, step: 10 });
 pane.addBinding(PARAMS, 'factor', { min: 0, max: 100, step: 10 });
+const backgroundBinding = pane.addBinding(PARAMS, 'background');
+const ballBinding = pane.addBinding(PARAMS, 'ball')
 /**
  * @function on
  * @description This function listens for changes in the volume parameter.
@@ -288,4 +291,16 @@ pane.addBinding(PARAMS, 'factor', { min: 0, max: 100, step: 10 });
  */
 volumeBinding.on('change', (ev) => {
     audio.volume = ev.value;
+});
+
+backgroundBinding.on('change', (ev) => {
+    const background = document.getElementById('background')
+    console.log(`rgb(${ev.value.r}, ${ev.value.g}, ${ev.value.b})`)
+    background.style.background = `rgb(${ev.value.r}, ${ev.value.g}, ${ev.value.b})`;
+});
+
+ballBinding.on('change', (ev) => {
+    const ball = document.getElementById('ball')
+    console.log(`rgb(${ev.value.r}, ${ev.value.g}, ${ev.value.b})`)
+    ball.style.background = `rgb(${ev.value.r}, ${ev.value.g}, ${ev.value.b})`;
 });
