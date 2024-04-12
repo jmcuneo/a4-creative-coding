@@ -114,10 +114,6 @@ const start = function () {
 };
 
 window.onload = async function () {
-  const canvas = document.createElement("canvas");
-  document.body.appendChild(canvas);
-
-  canvas.width = canvas.height = 512;
   newCanvas();
 
   const pane = new Pane({ title: "Controls" });

@@ -14,4 +14,8 @@ app.get("/", (req, res) => {
   res.render("index", { layout: false });
 });
 
+app.get("/about", (req, res) => {
+  res.render("about", { layout: false });
+});
+
 app.listen(3000);
