@@ -287,9 +287,6 @@ function killZombie(zombie) {
 		zombies.splice(killed[i], 1);
 	}
 	zombieCount--;
-	console.log("dzl: " + deadZombies.length);
-	console.log("zl: " + zombies.length);
-	console.log(zombieCount);
 }
 
 function handleDead() {
@@ -368,9 +365,7 @@ function handleDrops() {
 	let handled = [];
 	for (let i = 0; i<drops.length; i++) {
 		if(isAgentProximity(drops[i], 1.2)) {
-			console.log(i);
 			let drop = drops[i];
-			console.log(drop);
 			let dropType = drop.userData.drop;
 			if (dropType === "health") {
 				if (agent.health >= 150) continue;
