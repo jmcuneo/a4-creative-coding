@@ -39,6 +39,10 @@ canvas {
   font-size: 120%;
 }
 
+a:hover, a:focus {
+  color: rgb(219, 202, 239);
+}
+
 .header-title {
   text-align: center;
 }
