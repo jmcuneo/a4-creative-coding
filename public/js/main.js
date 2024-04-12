@@ -2,19 +2,27 @@ import { Pane } from "tweakpane";
 
 const PARAMS = {
   gain: 1.0,
-  color: {r: 69, g: 43, b: 230},
+  color: { r: 69, g: 43, b: 230 },
   background: { r: 219, g: 202, b: 239 },
   radius: 3.5,
   scale: 6,
   music: "./audio/ersatz.mp3",
   pan: 0,
+  invert: false,
 };
 
 // Clears the canvas and returns the context
 const newCanvas = function () {
   const canvas = document.querySelector("canvas");
   const ctx = canvas.getContext("2d");
-  ctx.fillStyle = `rgb(${PARAMS.background.r}, ${PARAMS.background.g}, ${PARAMS.background.b})`;
+  if (PARAMS.invert === false) {
+    ctx.fillStyle = `rgb(${PARAMS.background.r}, ${PARAMS.background.g}, ${PARAMS.background.b})`;
+  } else {
+    ctx.fillStyle = `rgb(${255 - PARAMS.background.r}, ${
+      255 - PARAMS.background.g
+    }, ${255 - PARAMS.background.b})`;
+  }
+
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   return ctx;
@@ -27,7 +35,7 @@ const start = function () {
   document.body.appendChild(audioElement);
 
   const analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 2048;
+  analyser.fftSize = 4096;
 
   const gainNode = audioCtx.createGain();
   const pannerOptions = { pan: PARAMS.pan };
@@ -51,7 +59,15 @@ const start = function () {
     }
 
     const ctx = newCanvas();
-    ctx.strokeStyle = `rgb(${PARAMS.color.r}, ${PARAMS.color.g}, ${PARAMS.color.b})`;
+
+    if (PARAMS.invert === false) {
+      ctx.strokeStyle = `rgb(${PARAMS.color.r}, ${PARAMS.color.g}, ${PARAMS.color.b})`;
+    } else {
+      ctx.strokeStyle = `rgb(${255 - PARAMS.color.r}, ${
+        255 - PARAMS.color.g
+      }, ${255 - PARAMS.color.b})`;
+    }
+
     gainNode.gain.value = PARAMS.gain;
     panner.pan.value = PARAMS.pan;
     analyser.getByteFrequencyData(results);
@@ -102,16 +118,15 @@ window.onload = async function () {
   document.body.appendChild(canvas);
 
   canvas.width = canvas.height = 512;
-  const ctx = canvas.getContext("2d");
-
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  newCanvas();
 
   const pane = new Pane({ title: "Controls" });
   pane.addBinding(PARAMS, "music", {
     options: {
       Ersatz: "./audio/ersatz.mp3",
       New_World: "./audio/new-world.mp3",
+      Fourth_track: "./audio/fourth-track.mp3",
+      Owl_Eyes: "./audio/owl-eyes.mp3",
     },
   });
   const tabs = pane.addTab({
@@ -121,6 +136,7 @@ window.onload = async function () {
   tabs.pages[0].addBinding(PARAMS, "background");
   tabs.pages[0].addBinding(PARAMS, "radius", { min: 1, max: 8, step: 0.25 });
   tabs.pages[0].addBinding(PARAMS, "scale", { min: 1, max: 15, step: 0.5 });
+  tabs.pages[0].addBinding(PARAMS, "invert");
   tabs.pages[1].addBinding(PARAMS, "gain", { min: 0.25, max: 5.0 });
   tabs.pages[1].addBinding(PARAMS, "pan", { min: -1, max: 1 });
 
