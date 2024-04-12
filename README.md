@@ -14,5 +14,7 @@ Include a very brief summary of your project here. Images are encouraged when ne
 - I have not taken Computer Graphics
 - I have incorporated an instructions html page in the beginning
 - the instructions you present in the website should be clear enough to use the application, but if you feel any need to provide additional instructions please do so here.
-- I also found adding tweakpane to be a little challenging
-- Using tweakpane you can change the volume of the audio, add the title, artist name, and genre
+- I also explored the use of global css and pseudo class selectors 
+- I found adding tweakpane to be a little challenging
+- Using tweakpane the user can change the volume of the audio, the background body color of the html page,
+- ball mesh color, and playback speed four input tags. 

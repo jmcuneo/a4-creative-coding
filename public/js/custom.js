@@ -1,6 +1,7 @@
 // CDN Tweakpane import
 import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane@4.0.3/dist/tweakpane.min.js'
 let noise = new SimplexNoise();
+let scene = new THREE.Scene();
 /**
  * @function vizInit
  * @description This function initializes the audio context and creates the 3D visualization of the audio file
@@ -48,7 +49,6 @@ let vizInit = function (){
         analyser.fftSize = 512;
         let bufferLength = analyser.frequencyBinCount;
         let dataArray = new Uint8Array(bufferLength);
-        let scene = new THREE.Scene();
         let group = new THREE.Group();
         let camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(0,0,100);
@@ -83,6 +83,7 @@ let vizInit = function (){
 
         let ball = new THREE.Mesh(icosahedronGeometry, lambertMaterial);
         ball.position.set(0, 0, 0);
+        ball.name="ball"
         group.add(ball);
         let ambientLight = new THREE.AmbientLight(0xaaaaaa);
         scene.add(ambientLight);
@@ -262,25 +263,16 @@ const pane = new Pane();
  * The parameters include the factor, title, color, percentage, theme, volume, ArtistName, and Genre.
  */
 const PARAMS = {
-    factor: 123,
-    title: '3D Song Visualization',
-    color: '#ff0055',
-    percentage: 50,
-    theme: '',
     volume: 0.5 ,
-    ArtistName: '',
-    Genre: '',
     background: {r: 13, g: 175, b: 173},
     ball: {r:0,g:0,b:0},
+    playback_speed: 1.0,
 };
-pane.addBinding(PARAMS, 'title', { min: 0, max: 100, step: 10 });
-pane.addBinding(PARAMS, 'ArtistName', { min: 0, max: 100, step: 10 });
-pane.addBinding(PARAMS, 'Genre', { min: 0, max: 100, step: 10 });
+
 const volumeBinding = pane.addBinding(PARAMS, 'volume', { min: 0, max: 1, step: 0.1 });
-pane.addBinding(PARAMS, 'percentage', { min: 0, max: 100, step: 10 });
-pane.addBinding(PARAMS, 'factor', { min: 0, max: 100, step: 10 });
 const backgroundBinding = pane.addBinding(PARAMS, 'background');
 const ballBinding = pane.addBinding(PARAMS, 'ball')
+const playbackBinding = pane.addBinding(PARAMS, 'playback_speed', { min: 0.3, max: 2.0, step: 0.1 })
 /**
  * @function on
  * @description This function listens for changes in the volume parameter.
@@ -300,7 +292,11 @@ backgroundBinding.on('change', (ev) => {
 });
 
 ballBinding.on('change', (ev) => {
-    const ball = document.getElementById('ball')
+    const ball = scene.getObjectByName('ball')
     console.log(`rgb(${ev.value.r}, ${ev.value.g}, ${ev.value.b})`)
-    ball.style.background = `rgb(${ev.value.r}, ${ev.value.g}, ${ev.value.b})`;
+    ball.material.color = new THREE.Color(`rgb(${Math.floor(ev.value.r)}, ${Math.floor(ev.value.g)}, ${Math.floor(ev.value.b)})`);
+});
+
+playbackBinding.on('change', (ev) => {
+    audio.playbackRate = ev.value;
 });
