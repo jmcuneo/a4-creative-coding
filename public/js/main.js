@@ -2,11 +2,11 @@ import { Pane } from "tweakpane";
 
 const PARAMS = {
   gain: 1.0,
-  color: { r: 28, g: 0, b: 204 },
+  color: {r: 69, g: 43, b: 230},
   background: { r: 219, g: 202, b: 239 },
-  radius: 4,
-  scale: 5,
-  music: "./test-audio.wav",
+  radius: 3.5,
+  scale: 6,
+  music: "./audio/ersatz.mp3",
   pan: 0,
 };
 
@@ -59,16 +59,16 @@ const start = function () {
     for (let i = 0; i < analyser.frequencyBinCount; i++) {
       let center = 512 / 2;
       let r = (PARAMS.radius * 512) / 24;
-      let x = r * Math.cos((Math.PI * 2 * i) / 512);
-      let y = r * Math.sin((Math.PI * 2 * i) / 512);
+      let x = r * Math.cos((Math.PI * 2 * i) / analyser.frequencyBinCount);
+      let y = r * Math.sin((Math.PI * 2 * i) / analyser.frequencyBinCount);
       let scale = results[i] * 0.001 * PARAMS.scale;
 
       ctx.beginPath();
       ctx.moveTo(
-        center + x * (1 - scale * 0.15),
-        center + y * (1 - scale * 0.15)
+        center - x * (1 - scale * 0.15),
+        center - y * (1 - scale * 0.15)
       );
-      ctx.lineTo(center + x * (1 + scale), center + y * (1 + scale));
+      ctx.lineTo(center - x * (1 + scale), center - y * (1 + scale));
       ctx.stroke();
     }
   };
@@ -110,8 +110,8 @@ window.onload = async function () {
   const pane = new Pane({ title: "Controls" });
   pane.addBinding(PARAMS, "music", {
     options: {
-      first: "./test-audio.wav",
-      second: "./test-audio-2.wav",
+      Ersatz: "./audio/ersatz.mp3",
+      New_World: "./audio/new-world.mp3",
     },
   });
   const tabs = pane.addTab({
