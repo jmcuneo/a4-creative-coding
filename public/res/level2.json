@@ -1,7 +1,7 @@
 {
     "start": {
-        "x": 20,
-        "y": 80
+        "x": 90,
+        "y": 90
     },
     "parameters": {
 
@@ -9,10 +9,31 @@
     "geometry": [
         {
             "x": 0,
+            "y": 70,
+            "width": 100,
+            "height": 30,
+            "type": "antigrav"
+        },
+        {
+            "x": 0,
+            "y": 30,
+            "width": 100,
+            "height": 40,
+            "type": "grav"
+        },
+        {
+            "x": 0,
             "y": 0,
             "width": 100,
-            "height": 100,
-            "type": "grav"
+            "height": 30,
+            "type": "antigrav"
+        },
+        {
+            "x": 0,
+            "y": 0,
+            "width": 10,
+            "height": 30,
+            "type": "win"
         },
         {
             "x": 0,
@@ -20,7 +41,7 @@
             "width": 100,
             "height": 1,
             "elasticity": 0.5,
-            "friction": 0.95,
+            "friction": 0.7,
             "type": "wall"
         },
         {
@@ -29,7 +50,7 @@
             "width": 1,
             "height": 100,
             "elasticity": 0.5,
-            "friction": 0.95,
+            "friction": 0.7,
             "type": "wall"
         },
         {
@@ -38,7 +59,7 @@
             "width": 100,
             "height": 1,
             "elasticity": 0.5,
-            "friction": 0.95,
+            "friction": 0.7,
             "type": "wall"
         },
         {
@@ -47,42 +68,26 @@
             "width": 1,
             "height": 100,
             "elasticity": 0.5,
-            "friction": 0.95,
+            "friction": 0.7,
             "type": "wall"
         },
         {
-            "x": 64.9,
-            "y": 50,
-            "width": 20.2,
-            "height": 20,
-            "type": "win"
-        },
-        {
-            "x": 64.9,
+            "x": 20,
             "y": 70,
-            "width": 20.2,
-            "height": 30,
+            "width": 80,
+            "height": 10,
             "elasticity": 0.5,
-            "friction": 0.95,
-            "type": "wall"
+            "friction": 0.7,
+            "type": "wall" 
         },
         {
-            "x": 50,
-            "y": 50,
-            "width": 15,
-            "height": 50,
+            "x": 0,
+            "y": 30,
+            "width": 80,
+            "height": 10,
             "elasticity": 0.5,
-            "friction": 0.95,
-            "type": "wall"
-        },
-        {
-            "x": 85,
-            "y": 50,
-            "width": 15,
-            "height": 50,
-            "elasticity": 0.5,
-            "friction": 0.95,
-            "type": "wall"
+            "friction": 0.7,
+            "type": "wall" 
         }
     ]
 }
