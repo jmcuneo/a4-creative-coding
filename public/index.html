@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang='en'>
+<script src="main.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
+<link rel="stylesheet" href="style.css" type="text/css">
+
+<head></head>
+<body>
+
+<div class="container">
+    <h1 id="header">Audio Visualizer</h1>
+
+    <input type="file" id="fileInput" accept="audio/*">
+
+    <div class="canvasContainer">
+        <div class="canvasWrapper">
+            <canvas id="visualizer" width="800" height="200"></canvas>
+        </div>
+        <input type="range" id="verticalSlider" class="vertical-slider" min="0" max="100" value="50" step="1">
+    </div>
+
+    <div class="buttonContainer">
+        <button id="startButton">Start Music</button>
+        <button id="stopButton">Stop Music</button>
+    </div>
+
+    <div class="colorFormContainer">
+        <div class="colorForm">
+            <label for="backgroundColorPicker">Canvas color:</label>
+            <input type="color" id="backgroundColorPicker" name="backgroundColorPicker">
+        </div>
+        <div class="colorForm">
+            <label for="columnColorPicker">Column color:</label>
+            <input type="color" id="columnColorPicker" name="columnColorPicker" value="#ffffff">
+        </div>
+    </div>
+    <button id="colorSubmit">Change Colors</button>
+
+    <button id="toggleButton">Background Color On</button>
+
+    <input type="range" id="barSlider" min="6" max="12" value="10" step="1">
+    <div class="slider-labels">
+        <label>64</label>
+        <label>128</label>
+        <label>256</label>
+        <label>512</label>
+        <label>1024</label>
+        <label>2048</label>
+        <label>4096</label>
+    </div>
+
+    <div id="info" class="popup">
+        <div class="popup-content">
+<!--            <span class="close-btn">&times;</span>-->
+            <h3>Welcome to my 2D Audio Visualizer</h3>
+            <p>
+                Feel free to upload your own music file, or use our default. You can start and stop the music at any time using the buttons below the canvas.
+            </p>
+            <p>
+                The bar slider on the left of the canvas adjusts the height of the visualizer bars. Additionally, there is a slider at the bottom to adjust the quantity of visualizer bars, the higher the number the more bars and details.
+            </p>
+            <p>
+                You can also change the color of the canvas background and the visualizer bars. To do so, select new colors and click 'Change Colors'. You'll notice the page background also changes with the colors. You can toggle this using the "Background Color On/Off" button.
+            </p>
+            <p>
+                Note that all changes will work while the song is playing EXCEPT the bar count slider, you must restart the song for that change to take effect.
+            </p>
+            <p style="text-align: center">
+                Click outside the popup to close
+            </p>
+            <p style="font-size: xx-small">
+                Keep an eye out for easter eggs! Don't forget 230 185 111 204 33 60
+            </p>
+        </div>
+    </div>
+
+
+
+</div>
+</body>
+
+</html>
