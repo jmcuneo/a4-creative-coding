@@ -16,5 +16,6 @@ Include a very brief summary of your project here. Images are encouraged when ne
 - the instructions you present in the website should be clear enough to use the application, but if you feel any need to provide additional instructions please do so here.
 - I also explored the use of global css and pseudo class selectors 
 - I found adding tweakpane to be a little challenging
-- Using tweakpane the user can change the volume of the audio, the background body color of the html page,
-- ball mesh color, and playback speed four input tags. 
+- I have incorporated four parameters for user control using tweakpane.
+- Tweakpane allows the user to change the volume of the audio, the background body color of the html page,
+- ball mesh color, and playback speed. 
