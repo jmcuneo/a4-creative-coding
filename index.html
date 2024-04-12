@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delayed Flights Over Time</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Frequency of Delayed and Cancelled Flights</h1>
+    <div>
+        <label for="airport-select">Select Airport:</label>
+        <select id="airport-select">
+            <option value="BOS">BOS (Boston)</option>
+            <option value="DFW">DFW (Dallas/Fort Worth)</option>
+            <option value="JFK">JFK (New York)</option>
+            <option value="LAX">LAX (Los Angeles)</option>
+            <option value="MIA">MIA (Miami)</option>
+            <option value="ORD">ORD (Chicago O'Hare)</option>
+        </select>
+    </div>
+    <div>
+        <label for="year-slider">Select Year:</label>
+        <input type="range" id="year-slider" min="2004" max="2015" step="1" value="2004">
+        <span id="selected-year">2004</span>
+    </div>
+    <div>
+        <button id="toggle-button">Show Cancelled Flights</button>
+    </div>
+    <div id="chart"></div>
+    <div id="cancelled-flights-chart"></div>
+
+    <button id="info-button">Info</button>
+
+    <script>
+        const url = 'https://think.cs.vt.edu/corgis/datasets/json/airlines/airlines.json';
+
+        async function fetchData() {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+        }
+
+        function updateGraph(selectedAirport, selectedYear, showDelayed) {
+            fetchData().then(data => {
+                const filteredData = data.filter(entry => {
+                    return entry.Airport.Code === selectedAirport &&
+                           entry.Time.Year == selectedYear; 
+                });
+
+                const monthlyDelayedFlightsData = Array.from({ length: 12 }, () => 0);
+                const monthlyCancelledFlightsData = Array.from({ length: 12 }, () => 0);
+
+                filteredData.forEach(entry => {
+                    const month = entry.Time.Month - 1; 
+                    monthlyDelayedFlightsData[month] += entry.Statistics.Flights.Delayed;
+                    monthlyCancelledFlightsData[month] += entry.Statistics.Flights.Cancelled;
+                });
+
+                d3.select("#chart").selectAll("*").remove();
+                d3.select("#cancelled-flights-chart").selectAll("*").remove();
+
+                if (showDelayed) {
+                    renderBarChart("#chart", monthlyDelayedFlightsData, "Delayed Flights", "steelblue", "Month", "Number of Flights");
+                } else {
+                    renderBarChart("#cancelled-flights-chart", monthlyCancelledFlightsData, "Cancelled Flights", "salmon", "Month", "Number of Flights");
+                }
+            });
+        }
+
+        function renderBarChart(selector, data, title, color, xAxisLabel, yAxisLabel) {
+            const margin = { top: 50, right: 30, bottom: 70, left: 70 }; 
+            const width = 600 - margin.left - margin.right;
+            const height = 400 - margin.top - margin.bottom;
+            
+            const svg = d3.select(selector)
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const x = d3.scaleBand()
+                .domain([...Array(12).keys()])
+                .range([0, width])
+                .padding(0.1);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(data)])
+                .nice()
+                .range([height, 0]);
+
+            svg.selectAll(".bar")
+                .data(data)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", (d, i) => x(i))
+                .attr("y", d => y(d))
+                .attr("width", x.bandwidth())
+                .attr("height", d => height - y(d))
+                .style("fill", color);
+
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickFormat((d, i) => i + 1))
+                .selectAll("text")
+                .attr("text-anchor", "end")
+                .style("fill", "white");
+
+            svg.append("g")
+                .call(d3.axisLeft(y))
+                .selectAll("text")
+                .style("fill", "white");
+
+            svg.append("text")
+                .attr("x", width / 2)
+                .attr("y", -margin.top / 2)
+                .attr("text-anchor", "middle")
+                .attr("fill", "white")
+                .text(title);
+
+            svg.append("text")
+                .attr("x", width / 2)
+                .attr("y", height + margin.bottom / 2)
+                .attr("text-anchor", "middle")
+                .attr("fill", "white")
+                .text(xAxisLabel);
+
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -height / 2)
+                .attr("y", -margin.left * .9) 
+                .attr("dy", "1em")
+                .attr("text-anchor", "middle")
+                .attr("fill", "white")
+                .text(yAxisLabel);
+        }
+
+        updateGraph('BOS', 2004, true); 
+
+        document.getElementById('airport-select').addEventListener('change', function(event) {
+            const selectedAirport = event.target.value;
+            const selectedYear = document.getElementById('year-slider').value;
+            const showDelayed = document.getElementById('toggle-button').textContent === "Toggle Delayed/Cancelled";
+            updateGraph(selectedAirport, selectedYear, showDelayed);
+        });
+
+        document.getElementById('year-slider').addEventListener('input', function(event) {
+            const selectedYear = event.target.value;
+            document.getElementById('selected-year').textContent = selectedYear;
+            const selectedAirport = document.getElementById('airport-select').value;
+            const showDelayed = document.getElementById('toggle-button').textContent === "Toggle Delayed/Cancelled";
+            updateGraph(selectedAirport, selectedYear, showDelayed);
+        });
+
+        document.getElementById('toggle-button').addEventListener('click', function() {
+            const button = document.getElementById('toggle-button');
+            const showDelayed = button.textContent === "Show Cancelled Flights";
+            button.textContent = showDelayed ? "Show Delayed Flights" : "Show Cancelled Flights";
+            const selectedAirport = document.getElementById('airport-select').value;
+            const selectedYear = document.getElementById('year-slider').value;
+            updateGraph(selectedAirport, selectedYear, !showDelayed);
+        });
+
+        const infoButton = document.getElementById('info-button');
+
+    
+        infoButton.addEventListener('click', () => {
+            alert('Explore flight delays and cancellations throughout the years in major US airports. Use the dropdown to select an airport, the slider to see different years, and the toggle button to switch between delayed and cancelled flights.');
+        });
+    </script>
+    <script>
+        window.onload = function() {
+            alert('Welcome! Explore flight delays and cancellations throughout the years in major US airports. Use the dropdown to select an airport, the slider to see different years, and the toggle button to switch between delayed and cancelled flights.');
+        };
+    </script>
+</body>
+</html>
