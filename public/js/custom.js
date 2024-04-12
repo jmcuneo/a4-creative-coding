@@ -1,3 +1,4 @@
+import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane@4.0.3/dist/tweakpane.min.js'
 let noise = new SimplexNoise();
 let vizInit = function (){
 
@@ -173,3 +174,22 @@ function avg(arr){
 function max(arr){
     return arr.reduce(function(a, b){ return Math.max(a, b); })
 }
+const pane = new Pane();
+
+const PARAMS = {
+    factor: 123,
+    title: '3D Song Visualization',
+    color: '#ff0055',
+    percentage: 50,
+    theme: 'dark',
+    volume: 0.5 // Add this line
+};
+pane.addBinding(PARAMS, 'Title', { min: 0, max: 100, step: 10 });
+pane.addBinding(PARAMS, 'Artist Name', { min: 0, max: 100, step: 10 });
+pane.addBinding(PARAMS, 'Genre', { min: 0, max: 100, step: 10 });
+const volumeBinding = pane.addBinding(PARAMS, 'volume', { min: 0, max: 1, step: 0.1 });
+pane.addBinding(PARAMS, 'percentage', { min: 0, max: 100, step: 10 });
+pane.addBinding(PARAMS, 'factor', { min: 0, max: 100, step: 10 });
+volumeBinding.on('change', (ev) => {
+    audio.volume = ev.value;
+});

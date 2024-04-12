@@ -9,10 +9,12 @@ const port = process.env.PORT || 3000; // Use process.env.PORT or default to 300
 
 app. use(express. static('public'));
 app.get("/", (req, res) => {
-    const htmlFile = path.join(__dirname, './public/html/index.html');
+    const htmlFile = path.join(__dirname, './public/html/instruction.html');
     res.sendFile(htmlFile)
 });
-
+app.get("/visualizer",(req, res) => {
+    const htmlFile = path.join(__dirname, './public/html/index.html');
+    res.sendFile(htmlFile)});
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
