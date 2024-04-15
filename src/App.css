@@ -1,0 +1,104 @@
+.App {
+  text-align: center;
+}
+
+.App-canvas {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+
+.upbutton {
+  position: absolute;
+  top: 100px;
+  left: 400px;
+ }
+
+.downbutton {
+  position: absolute;
+  top: 150px;
+  left: 400px;
+}
+
+.rightbutton {
+  position: absolute;
+  top: 125px;
+  left: 425px;
+}
+
+.leftbutton {
+  position: absolute;
+  top: 125px;
+  left: 375px;
+}
+
+.remove {
+  position: absolute;
+  top: 200px;
+  left: 378px;
+}
+
+.moveCounter {
+  position: absolute;
+  top: 0px;
+  left: 383px;
+}
+
+.scoreCounter {
+  position: absolute;
+  top: 20px;
+  left: 383px;
+}
+
+.selectConfig {
+  position: absolute;
+  top: 0px;
+  left: 500px;
+}
+
+.easy5x5 {
+  position: absolute;
+  top: 30px;
+  left: 510px;
+}
+
+.config4x4 {
+  position: absolute;
+  top: 30px;
+  left: 580px;
+}
+
+.config6x6 {
+  position: absolute;
+  top: 30px;
+  left: 615px;
+}
+
+.hard5x5 {
+  position: absolute;
+  top: 30px;
+  left: 545px;
+}
+
+.reset {
+  position: absolute;
+  top: 150px;
+  left: 547px;
+}
+
+.victory {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  font-size: 30px;
+  background-color: rgb(197, 161, 231);
+  /* width: 100px; */
+  /* text-align: left; */
+}
+
+.instructions {
+  position: absolute;
+  top: 340px;
+  left: 30px;
+  text-align: left;
+}
