@@ -1,10 +1,8 @@
 import React from 'react';
 import './App.css';
-
 import Model from './Game.js';
 import { Up, Down, Left, Right } from './Game.js';
 import { redrawCanvas } from './DrawGame.js';
-
 import cat from './cat.svg';
 
 var currentConfig = 0;

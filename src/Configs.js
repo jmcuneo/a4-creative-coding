@@ -47,7 +47,7 @@ export const config_5x5_2 = {
 }
 
 export const config_4x4 = {
-    "name": "Configuration #2",
+    "name": "4x4",
     "numRows" : "4",
     "numColumns" : "4",
     "catRow" : "2",
@@ -61,7 +61,7 @@ export const config_4x4 = {
 }
 
 export const config_6x6 = {
-    "name": "Configuration #3",
+    "name": "6x6",
     "numRows" : "6",
     "numColumns" : "6",
     "catRow" : "1",
