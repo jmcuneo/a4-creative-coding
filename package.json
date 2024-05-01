@@ -1,0 +1,17 @@
+{
+  "name": "a4-eshabajwa2",
+  "version": "1.0.0",
+  "description": "Assignment 4 - Creative Coding: Interactive Multimedia Experiences ===",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "d3": "^7.9.0",
+    "express": "^4.19.2",
+    "node-fetch": "^3.3.2"
+  }
+}
