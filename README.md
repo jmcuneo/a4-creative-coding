@@ -1,4 +1,7 @@
-#Assignment 4 Esha Bajwa
+# Assignment 4 Esha Bajwa
+
+## please watch DEMO.mp4
+PLEASE WATCH DEMO VIDEO IN THIS REPO!!!!- things will not make sence if you dont 
 
 your hosting link e.g. http://a4-charlieroberts.glitch.me
 

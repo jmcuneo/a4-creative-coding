@@ -10,7 +10,7 @@ colorForm.addEventListener('submit', async (event) => {
   const color = document.getElementById('color').value;
   
   try {
-    const response = await fetchData();
+    const response = await fetch(`/data?color=${color}`);
     const data = await response.json();
     
     drawBarGraph(data, color);
@@ -18,21 +18,6 @@ colorForm.addEventListener('submit', async (event) => {
     console.error('Error:', error);
   }
 });
-async function fetchData() {
-  try {
-    const response = await fetch('https://api.worldbank.org/v2/countries/USA/indicators/NY.GDP.MKTP.CD?per_page=5000&format=json');
-    if (!response.ok) {
-      throw new Error('THIS IS BROKEN');
-    }
-    console.log(response);
-    const data = await response.json();
-    const gdpData = data[1].map(d => ({ year: d.date, value: d.value }));
-    return gdpData;
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    throw error;
-  }
-}
 //useed this video to help with the bar graph https://www.youtube.com/watch?v=BDpBAFvdjYo
 function drawBarGraph(data, color) {
   svg.selectAll('*').remove(); 
