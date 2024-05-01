@@ -1,19 +1,25 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>D3.js Bar Chart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>US GDP</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div>
-        <label for="year">Select a Year:</label>
-        <input type="range" id="year" min="1960" max="2021" value="2021">
-        <span id="yearLabel">2021</span>
-    </div>
-  <div id="chart-container"></div>
-  <script src="main.js"></script>
-
+    <h1>USA GDP Over Time</h1>
+    <p role="doc-tip">This website shows the US GDP over time.</p>
+    <form id="colorForm" role="form" aria-label="Choose color form">
+      <label for="color">Choose a color for the bar graph:</label>
+      <input type="color" id="color" name="color" value="#4682B4" aria-label="Color picker">
+      <button type="submit" aria-label="Submit">Submit</button>
+    </form>
+    
+    <svg id="barGraph" width="1000" height="1000" role="img" aria-label="Bar graph"></svg>
+    
+    <script src="index.js" aria-label="JavaScript"></script>
+    
 </body>
 </html>
+
