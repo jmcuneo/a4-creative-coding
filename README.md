@@ -1,4 +1,4 @@
-## Boid Simulation
+# Boid Simulation
 
 https://a4-jaysoncaissie.glitch.me/
 
